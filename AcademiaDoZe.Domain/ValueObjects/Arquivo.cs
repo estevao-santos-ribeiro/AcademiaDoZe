@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AcademiaDoZe.Domain.ValueObjects
 {
-    internal class Arquivo
-    {
-    }
+    public record Arquivo(string Nome, byte[] Conteudo, string ContentType, long Tamanho);
 }

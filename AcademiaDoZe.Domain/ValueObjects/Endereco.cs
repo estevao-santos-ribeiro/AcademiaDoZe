@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AcademiaDoZe.Domain.ValueObjects
 {
-    internal class Endereco
-    {
-    }
+    public record Endereco(Guid? LogradouroId, string Numero, string Complemento, Cep Cep);
 }

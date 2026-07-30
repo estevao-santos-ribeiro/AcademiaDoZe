@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AcademiaDoZe.Domain.ValueObjects
 {
-    internal class Email
-    {
-    }
+    public record Email(string Endereco);
 }
