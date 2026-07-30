@@ -1,4 +1,4 @@
-﻿using System;
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Enums;
 
 namespace AcademiaDoZe.Domain.Entities

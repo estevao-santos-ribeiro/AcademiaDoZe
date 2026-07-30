@@ -1,4 +1,4 @@
-﻿using System;
+﻿// Estevão Santos Ribeiro
 using System.Collections.Generic;
 using AcademiaDoZe.Domain.ValueObjects;
 
