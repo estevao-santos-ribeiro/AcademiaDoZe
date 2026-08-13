@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Estevão Santos Ribeiro
 
 namespace AcademiaDoZe.Domain.Enums
 {
-    internal class ColaboradorTipo
+    public enum ColaboradorTipo
     {
+        Instrutor = 1,
+        Administrativo = 2,
+        Gerente = 3,
+        Outro = 99
     }
 }

@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// Estevão Santos Ribeiro
 
 namespace AcademiaDoZe.Domain.Enums
 {
-    internal class MatriculaPlano
+    public enum MatriculaPlano
     {
+        Mensal = 1,
+        Trimestral = 3,
+        Semestral = 6,
+        Anual = 12
     }
 }
