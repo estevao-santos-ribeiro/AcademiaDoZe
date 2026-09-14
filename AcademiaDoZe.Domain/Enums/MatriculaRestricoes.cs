@@ -1,15 +1,14 @@
-﻿// Estevão Santos Ribeiro
+// Estevão Santos Ribeiro
+namespace AcademiaDoZe.Domain.Enums;
 
-namespace AcademiaDoZe.Domain.Enums
+[Flags]
+public enum MatriculaRestricoes
 {
-    [Flags]
-    public enum MatriculaRestricoes
-    {
-        Nenhuma = 0,
-        Piscina = 1 << 0,
-        Musculacao = 1 << 1,
-        AulasColetivas = 1 << 2,
-        Estacionamento = 1 << 3,
-        Spinning = 1 << 4
-    }
+    None = 0,
+    Diabetes = 1,
+    PressaoAlta = 2,
+    Labirintite = 4,
+    Alergias = 8,
+    ProblemasRespiratorios = 16,
+    RemedioContinuo = 32
 }

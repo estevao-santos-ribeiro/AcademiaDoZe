@@ -1,51 +1,22 @@
 // Estevão Santos Ribeiro
+namespace AcademiaDoZe.Domain.Common;
 
-namespace AcademiaDoZe.Domain.Common
+public class Result<T>
 {
-    public sealed class Result<T>
+    public T? Value { get; }
+    public IReadOnlyCollection<Notification> Notifications { get; }
+
+    public bool IsSuccess => Notifications.Count == 0;
+    public bool IsFailure => Notifications.Count != 0;
+
+    private Result(T? value, IEnumerable<Notification> notifications)
     {
-        private Result(bool isSuccess, T? value, IReadOnlyList<Notification>? notifications)
-        {
-            IsSuccess = isSuccess;
-            Value = value;
-            Notifications = notifications ?? new List<Notification>();
-        }
-
-        public bool IsSuccess { get; }
-
-        public T? Value { get; }
-
-        public IReadOnlyList<Notification> Notifications { get; }
-
-        public static Result<T> Success(T value)
-            => new Result<T>(true, value, null);
-
-        public static Result<T> Failure(Notification notification)
-            => new Result<T>(false, default, new[] { notification });
-
-        public static Result<T> Failure(IEnumerable<Notification> notifications)
-            => new Result<T>(false, default, notifications.ToList());
-
-        public void Match(Action<T> onSuccess, Action<IReadOnlyList<Notification>> onFailure)
-        {
-            if (IsSuccess && Value != null)
-            {
-                onSuccess(Value);
-            }
-            else
-            {
-                onFailure(Notifications);
-            }
-        }
-
-        public Result<TOut> Map<TOut>(Func<T, TOut> mapper)
-        {
-            if (IsSuccess && Value != null)
-            {
-                return Result<TOut>.Success(mapper(Value));
-            }
-
-            return Result<TOut>.Failure(Notifications);
-        }
+        Value = value;
+        Notifications = notifications.ToList().AsReadOnly();
     }
+
+    public static Result<T> Success(T value) => new(value, []);
+    public static Result<T> Failure(IEnumerable<Notification> notifications) => new(default, notifications);
+    public static Result<T> Failure(string propriedade, string mensagem) => new(default, [new Notification(propriedade, mensagem)]);
+    public static Result<T> Failure(Notification notification) => new(default, [notification]);
 }

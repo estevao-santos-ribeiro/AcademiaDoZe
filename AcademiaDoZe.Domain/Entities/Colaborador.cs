@@ -1,168 +1,69 @@
-﻿// Estevão Santos Ribeiro
-
+// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 using AcademiaDoZe.Domain.Enums;
 using AcademiaDoZe.Domain.Services;
 using AcademiaDoZe.Domain.ValueObjects;
 
-namespace AcademiaDoZe.Domain.Entities
+namespace AcademiaDoZe.Domain.Entities;
+
+public class Colaborador : Pessoa, IAggregateRoot
 {
-    public class Colaborador : Pessoa
+    // encapsulamento das propriedades, aplicando imutabilidade
+    public DateOnly DataAdmissao { get; private set; }
+    public ColaboradorTipo Tipo { get; private set; }
+    public ColaboradorVinculo Vinculo { get; private set; }
+
+    // construtor privado para evitar instância direta
+    private Colaborador(int id, string nome, Cpf cpf, DateOnly dataNascimento, Telefone telefone, Email email, Endereco endereco, Senha senha, Arquivo foto, DateOnly dataAdmissao,
+        ColaboradorTipo tipo, ColaboradorVinculo vinculo) : base(id, nome, cpf, dataNascimento, telefone, email, endereco, senha, foto)
     {
-        private Colaborador(
-            Guid id,
-            string nome,
-            DateTime dataNascimento,
-            Cpf cpf,
-            Email email,
-            Telefone telefone,
-            Endereco endereco,
-            ColaboradorTipo tipo,
-            ColaboradorVinculo vinculo,
-            DateTime dataAdmissao,
-            string? registro,
-            Arquivo? foto)
-            : base(id, nome, dataNascimento, cpf, email, telefone, endereco, foto)
-        {
-            Tipo = tipo;
-            Vinculo = vinculo;
-            DataAdmissao = dataAdmissao;
-            Registro = registro;
-        }
+        DataAdmissao = dataAdmissao;
+        Tipo = tipo;
+        Vinculo = vinculo;
+    }
 
-        public ColaboradorTipo Tipo { get; private set; }
+    // método de fábrica, ponto de entrada para criar um objeto válido
+    public static Result<Colaborador> Criar(int id, string nome, string cpf, DateOnly dataNascimento, string telefone, string email, Logradouro endereco, string numero, string complemento, string senha, Arquivo foto,
+        DateOnly dataAdmissao, ColaboradorTipo tipo, ColaboradorVinculo vinculo)
+    {
+        var notifications = new List<Notification>();
 
-        public ColaboradorVinculo Vinculo { get; private set; }
+        if (NormalizacaoService.TextoVazioOuNulo(nome)) notifications.Add(new Notification("Nome", "NOME_OBRIGATORIO"));
+        else nome = NormalizacaoService.LimparEspacos(nome);
 
-        public DateTime DataAdmissao { get; private set; }
+        if (dataNascimento == default) notifications.Add(new Notification("DataNascimento", "DATA_NASCIMENTO_OBRIGATORIO"));
+        else if (dataNascimento > DateOnly.FromDateTime(DateTime.Today.AddYears(-12))) notifications.Add(new Notification("DataNascimento", "DATA_NASCIMENTO_MINIMA_INVALIDA"));
 
-        public string? Registro { get; private set; }
+        if (dataAdmissao == default) notifications.Add(new Notification("DataAdmissao", "DATA_ADMISSAO_OBRIGATORIO"));
+        else if (dataAdmissao > DateOnly.FromDateTime(DateTime.Today)) notifications.Add(new Notification("DataAdmissao", "DATA_ADMISSAO_MAIOR_QUE_ATUAL"));
 
-        public static Result<Colaborador> Criar(
-            string? nome,
-            DateTime dataNascimento,
-            string? cpf,
-            string? email,
-            string? telefoneDdd,
-            string? telefoneNumero,
-            Guid? logradouroId,
-            string? enderecoCep,
-            string? enderecoNumero,
-            string? enderecoComplemento,
-            ColaboradorTipo tipo,
-            ColaboradorVinculo vinculo,
-            DateTime dataAdmissao,
-            string? registro = null,
-            byte[]? fotoConteudo = null,
-            string? fotoNome = null,
-            string? fotoContentType = null)
-        {
-            return Criar(
-                Guid.NewGuid(),
-                nome,
-                dataNascimento,
-                cpf,
-                email,
-                telefoneDdd,
-                telefoneNumero,
-                logradouroId,
-                enderecoCep,
-                enderecoNumero,
-                enderecoComplemento,
-                tipo,
-                vinculo,
-                dataAdmissao,
-                registro,
-                fotoConteudo,
-                fotoNome,
-                fotoContentType);
-        }
+        if (!Enum.IsDefined(tipo)) notifications.Add(new Notification("Tipo", "TIPO_COLABORADOR_INVALIDO"));
+        if (!Enum.IsDefined(vinculo)) notifications.Add(new Notification("Vinculo", "VINCULO_COLABORADOR_INVALIDO"));
 
-        public static Result<Colaborador> Criar(
-            Guid id,
-            string? nome,
-            DateTime dataNascimento,
-            string? cpf,
-            string? email,
-            string? telefoneDdd,
-            string? telefoneNumero,
-            Guid? logradouroId,
-            string? enderecoCep,
-            string? enderecoNumero,
-            string? enderecoComplemento,
-            ColaboradorTipo tipo,
-            ColaboradorVinculo vinculo,
-            DateTime dataAdmissao,
-            string? registro = null,
-            byte[]? fotoConteudo = null,
-            string? fotoNome = null,
-            string? fotoContentType = null)
-        {
-            var resultPessoa = Pessoa.Criar(
-                id,
-                nome,
-                dataNascimento,
-                cpf,
-                email,
-                telefoneDdd,
-                telefoneNumero,
-                logradouroId,
-                enderecoCep,
-                enderecoNumero,
-                enderecoComplemento,
-                fotoConteudo,
-                fotoNome,
-                fotoContentType);
+        if (Enum.IsDefined(tipo) && Enum.IsDefined(vinculo) && tipo == ColaboradorTipo.Administrador && vinculo != ColaboradorVinculo.CLT) notifications.Add(new Notification("Vinculo", "ADMINISTRADOR_CLT_INVALIDO"));
 
-            var notifications = new List<Notification>();
+        // Instanciação e validação via Value Objects
+        var cpfResult = Cpf.Criar(cpf);
+        if (cpfResult.IsFailure) notifications.AddRange(cpfResult.Notifications);
 
-            if (!resultPessoa.IsSuccess)
-            {
-                notifications.AddRange(resultPessoa.Notifications);
-            }
+        var telefoneResult = Telefone.Criar(telefone);
+        if (telefoneResult.IsFailure) notifications.AddRange(telefoneResult.Notifications);
 
-            var registroNormalizado = Normalizer.NormalizeString(registro ?? string.Empty);
+        var emailResult = Email.Criar(email);
+        if (emailResult.IsFailure) notifications.AddRange(emailResult.Notifications);
 
-            if (!Enum.IsDefined(typeof(ColaboradorTipo), tipo))
-            {
-                notifications.Add(Notification.Create(nameof(Tipo), "Tipo de colaborador inválido."));
-            }
+        var senhaResult = Senha.Criar(senha);
+        if (senhaResult.IsFailure) notifications.AddRange(senhaResult.Notifications);
 
-            if (!Enum.IsDefined(typeof(ColaboradorVinculo), vinculo))
-            {
-                notifications.Add(Notification.Create(nameof(Vinculo), "Vínculo de trabalho inválido."));
-            }
+        var enderecoResult = Endereco.Criar(endereco, numero, complemento);
+        if (enderecoResult.IsFailure) notifications.AddRange(enderecoResult.Notifications);
 
-            if (dataAdmissao == default)
-            {
-                notifications.Add(Notification.Create(nameof(DataAdmissao), "Data de admissão é obrigatória."));
-            }
-            else if (dataAdmissao > DateTime.Today)
-            {
-                notifications.Add(Notification.Create(nameof(DataAdmissao), "Data de admissão não pode ser no futuro."));
-            }
+        if (notifications.Count != 0)
+            return Result<Colaborador>.Failure(notifications);
 
-            if (notifications.Any())
-            {
-                return Result<Colaborador>.Failure(notifications);
-            }
+        // criação e retorno do objeto
+        var colaborador = new Colaborador(id, nome, cpfResult.Value!, dataNascimento, telefoneResult.Value!, emailResult.Value!, enderecoResult.Value!, senhaResult.Value!, foto, dataAdmissao, tipo, vinculo);
 
-            var pessoa = resultPessoa.Value!;
-            var colaborador = new Colaborador(
-                pessoa.Id,
-                pessoa.Nome,
-                pessoa.DataNascimento,
-                pessoa.Cpf,
-                pessoa.Email,
-                pessoa.Telefone,
-                pessoa.Endereco,
-                tipo,
-                vinculo,
-                dataAdmissao,
-                string.IsNullOrWhiteSpace(registroNormalizado) ? null : registroNormalizado,
-                pessoa.Foto);
-
-            return Result<Colaborador>.Success(colaborador);
-        }
+        return Result<Colaborador>.Success(colaborador);
     }
 }

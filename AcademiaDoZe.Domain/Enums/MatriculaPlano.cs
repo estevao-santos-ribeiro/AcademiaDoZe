@@ -1,12 +1,10 @@
-﻿// Estevão Santos Ribeiro
+// Estevão Santos Ribeiro
+namespace AcademiaDoZe.Domain.Enums;
 
-namespace AcademiaDoZe.Domain.Enums
+public enum MatriculaPlano
 {
-    public enum MatriculaPlano
-    {
-        Mensal = 1,
-        Trimestral = 3,
-        Semestral = 6,
-        Anual = 12
-    }
+    Mensal = 0,
+    Trimestral = 1,
+    Semestral = 2,
+    Anual = 3
 }

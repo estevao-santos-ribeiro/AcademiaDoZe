@@ -1,105 +1,35 @@
-﻿// Estevão Santos Ribeiro
-
+// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
-using AcademiaDoZe.Domain.ValueObjects;
 
-namespace AcademiaDoZe.Domain.Entities
+namespace AcademiaDoZe.Domain.Entities;
+
+public class AcessoColaborador : Entity, IAggregateRoot
 {
+    public int ColaboradorId { get; private set; }
+    public DateTime DataHora { get; private set; }
 
-    public class AcessoColaborador : Entity
+    private AcessoColaborador(int id, int colaboradorId, DateTime dataHora) : base(id)
     {
-        private AcessoColaborador(
-            Guid id,
-            Guid colaboradorId,
-            Senha senha,
-            bool ativo,
-            DateTime? ultimoAcesso)
-            : base(id)
-        {
-            ColaboradorId = colaboradorId;
-            Senha = senha;
-            Ativo = ativo;
-            UltimoAcesso = ultimoAcesso;
-        }
+        ColaboradorId = colaboradorId;
+        DataHora = dataHora;
+    }
 
-        public Guid ColaboradorId { get; private set; }
+    public static Result<AcessoColaborador> Criar(int id, Colaborador colaborador, DateTime dataHora)
+    {
+        var notifications = new List<Notification>();
 
-        public Colaborador? Colaborador { get; private set; }
+        if (colaborador == null)
+            notifications.Add(new Notification("Colaborador", "COLABORADOR_INVALIDO"));
 
-        public Senha Senha { get; private set; }
+        if (dataHora.TimeOfDay < new TimeSpan(6, 0, 0) || dataHora.TimeOfDay > new TimeSpan(22, 0, 0))
+            notifications.Add(new Notification("DataHora", "DATA_HORA_INTERVALO_INVALIDO"));
 
-        public bool Ativo { get; private set; }
+        if (notifications.Count != 0)
+            return Result<AcessoColaborador>.Failure(notifications);
 
-        public DateTime? UltimoAcesso { get; private set; }
-
-        public static Result<AcessoColaborador> Criar(
-            Guid colaboradorId,
-            string? senhaHash,
-            bool ativo,
-            DateTime? ultimoAcesso = null)
-        {
-            return Criar(
-                Guid.NewGuid(),
-                colaboradorId,
-                senhaHash,
-                ativo,
-                ultimoAcesso);
-        }
-
-        public static Result<AcessoColaborador> Criar(
-            Guid id,
-            Guid colaboradorId,
-            string? senhaHash,
-            bool ativo,
-            DateTime? ultimoAcesso = null)
-        {
-            var notifications = new List<Notification>();
-
-            if (colaboradorId == Guid.Empty)
-            {
-                notifications.Add(Notification.Create(nameof(ColaboradorId), "ID do colaborador é obrigatório."));
-            }
-
-            var resultSenha = Senha.Criar(senhaHash);
-            if (!resultSenha.IsSuccess)
-            {
-                notifications.AddRange(resultSenha.Notifications);
-            }
-
-            if (ultimoAcesso.HasValue && ultimoAcesso.Value > DateTime.UtcNow)
-            {
-                notifications.Add(Notification.Create(nameof(UltimoAcesso), "Data do último acesso não pode ser no futuro."));
-            }
-
-            if (notifications.Any())
-            {
-                return Result<AcessoColaborador>.Failure(notifications);
-            }
-
-            var acesso = new AcessoColaborador(
-                id,
-                colaboradorId,
-                resultSenha.Value!,
-                ativo,
-                ultimoAcesso);
-
-            return Result<AcessoColaborador>.Success(acesso);
-        }
-
-        public void RegistrarAcesso()
-        {
-            UltimoAcesso = DateTime.UtcNow;
-        }
-
-        public void DefinirColaborador(Colaborador colaborador)
-        {
-            if (colaborador == null)
-                throw new ArgumentNullException(nameof(colaborador));
-
-            if (colaborador.Id != ColaboradorId)
-                throw new InvalidOperationException("O ID do colaborador não corresponde ao ColaboradorId do acesso.");
-
-            Colaborador = colaborador;
-        }
+        return Result<AcessoColaborador>.Success(new AcessoColaborador(id, colaborador!.Id, dataHora));
     }
 }
+// Dependem da persistência:
+// Validar se já não ultrapassa o limite de:  8 horas se for ctl, 6 horas se for estágio.
+// Na saída, mostrar o tempo que permaneceu na academia, devendo ser somado todos os registros do dia.

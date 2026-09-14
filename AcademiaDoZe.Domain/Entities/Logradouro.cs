@@ -1,108 +1,55 @@
-﻿// Estevão Santos Ribeiro
-
+// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 using AcademiaDoZe.Domain.Services;
 using AcademiaDoZe.Domain.ValueObjects;
 
-namespace AcademiaDoZe.Domain.Entities
+namespace AcademiaDoZe.Domain.Entities;
+
+public sealed class Logradouro : Entity, IAggregateRoot
 {
-    public class Logradouro : Entity
+    // encapsulamento das propriedades, aplicando imutabilidade
+    public Cep Cep { get; }
+    public string Nome { get; }
+    public string Bairro { get; }
+    public string Cidade { get; }
+    public string Estado { get; }
+    public string Pais { get; }
+
+    private Logradouro(int id, Cep cep, string nome, string bairro, string cidade, string estado, string pais) : base(id)
     {
-        private Logradouro(
-            Guid id,
-            string nome,
-            string bairro,
-            string cidade,
-            string estado,
-            Cep cep)
-            : base(id)
-        {
-            Nome = nome;
-            Bairro = bairro;
-            Cidade = cidade;
-            Estado = estado;
-            Cep = cep;
-        }
+        Cep = cep;
+        Nome = nome;
+        Bairro = bairro;
+        Cidade = cidade;
+        Estado = estado;
+        Pais = pais;
+    }
 
-        public string Nome { get; private set; }
+    public static Result<Logradouro> Criar(int id, string cep, string nome, string bairro, string cidade, string estado, string pais)
+    {
+        var notifications = new List<Notification>();
 
-        public string Bairro { get; private set; }
+        var cepResult = Cep.Criar(cep);
+        if (cepResult.IsFailure) notifications.AddRange(cepResult.Notifications);
 
-        public string Cidade { get; private set; }
+        if (NormalizacaoService.TextoVazioOuNulo(nome)) notifications.Add(new Notification("Nome", "NOME_OBRIGATORIO"));
+        else nome = NormalizacaoService.LimparEspacos(nome);
 
-        public string Estado { get; private set; }
+        if (NormalizacaoService.TextoVazioOuNulo(bairro)) notifications.Add(new Notification("Bairro", "BAIRRO_OBRIGATORIO"));
+        else bairro = NormalizacaoService.LimparEspacos(bairro);
 
-        public Cep Cep { get; private set; }
+        if (NormalizacaoService.TextoVazioOuNulo(cidade)) notifications.Add(new Notification("Cidade", "CIDADE_OBRIGATORIO"));
+        else cidade = NormalizacaoService.LimparEspacos(cidade);
 
-        public static Result<Logradouro> Criar(
-            string? nome,
-            string? bairro,
-            string? cidade,
-            string? estado,
-            string? cep)
-        {
-            return Criar(Guid.NewGuid(), nome, bairro, cidade, estado, cep);
-        }
+        if (NormalizacaoService.TextoVazioOuNulo(estado)) notifications.Add(new Notification("Estado", "ESTADO_OBRIGATORIO"));
+        else estado = NormalizacaoService.ParaMaiusculo(NormalizacaoService.LimparTodosEspacos(estado));
 
-        public static Result<Logradouro> Criar(
-            Guid id,
-            string? nome,
-            string? bairro,
-            string? cidade,
-            string? estado,
-            string? cep)
-        {
-            var notifications = new List<Notification>();
+        if (NormalizacaoService.TextoVazioOuNulo(pais)) notifications.Add(new Notification("Pais", "PAIS_OBRIGATORIO"));
+        else pais = NormalizacaoService.LimparEspacos(pais);
 
-            var nomeNormalizado = Normalizer.NormalizeString(nome);
-            var bairroNormalizado = Normalizer.NormalizeString(bairro);
-            var cidadeNormalizado = Normalizer.NormalizeString(cidade);
-            var estadoNormalizado = Normalizer.NormalizeUpperCase(estado);
+        if (notifications.Count != 0)
+            return Result<Logradouro>.Failure(notifications);
 
-            if (string.IsNullOrWhiteSpace(nomeNormalizado))
-            {
-                notifications.Add(Notification.Create(nameof(Nome), "Nome do logradouro é obrigatório."));
-            }
-
-            if (string.IsNullOrWhiteSpace(bairroNormalizado))
-            {
-                notifications.Add(Notification.Create(nameof(Bairro), "Bairro é obrigatório."));
-            }
-
-            if (string.IsNullOrWhiteSpace(cidadeNormalizado))
-            {
-                notifications.Add(Notification.Create(nameof(Cidade), "Cidade é obrigatória."));
-            }
-
-            if (string.IsNullOrWhiteSpace(estadoNormalizado))
-            {
-                notifications.Add(Notification.Create(nameof(Estado), "Estado/UF é obrigatório."));
-            }
-            else if (estadoNormalizado.Length != 2)
-            {
-                notifications.Add(Notification.Create(nameof(Estado), "Estado/UF deve ter exatamente 2 caracteres."));
-            }
-
-            var resultCep = Cep.Criar(cep);
-            if (!resultCep.IsSuccess)
-            {
-                notifications.AddRange(resultCep.Notifications);
-            }
-
-            if (notifications.Any())
-            {
-                return Result<Logradouro>.Failure(notifications);
-            }
-
-            var logradouro = new Logradouro(
-                id,
-                nomeNormalizado,
-                bairroNormalizado,
-                cidadeNormalizado,
-                estadoNormalizado,
-                resultCep.Value!);
-
-            return Result<Logradouro>.Success(logradouro);
-        }
+        return Result<Logradouro>.Success(new Logradouro(id, cepResult.Value!, nome, bairro, cidade, estado, pais));
     }
 }

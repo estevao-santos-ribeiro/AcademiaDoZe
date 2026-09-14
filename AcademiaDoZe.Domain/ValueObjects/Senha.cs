@@ -1,33 +1,30 @@
-﻿// Estevão Santos Ribeiro
-
+// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
+using AcademiaDoZe.Domain.Services;
 
-namespace AcademiaDoZe.Domain.ValueObjects
+namespace AcademiaDoZe.Domain.ValueObjects;
+
+public record Senha
 {
-    public sealed record Senha
+    public string Valor { get; }
+
+    private Senha(string valor)
     {
-        private Senha(string hash)
-        {
-            Hash = hash;
-        }
-
-        public string Hash { get; }
-
-        public static Result<Senha> Criar(string? hash)
-        {
-            var notifications = new List<Notification>();
-
-            if (string.IsNullOrWhiteSpace(hash))
-            {
-                notifications.Add(Notification.Create(nameof(Senha), "Hash de senha é obrigatório."));
-            }
-
-            if (notifications.Any())
-            {
-                return Result<Senha>.Failure(notifications);
-            }
-
-            return Result<Senha>.Success(new Senha(hash!));
-        }
+        Valor = valor;
     }
+
+    public static Result<Senha> Criar(string valor)
+    {
+        if (NormalizacaoService.TextoVazioOuNulo(valor))
+            return Result<Senha>.Failure("Senha", "SENHA_OBRIGATORIO");
+
+        var textoLimpo = NormalizacaoService.LimparEspacos(valor);
+
+        if (textoLimpo.Length < 6 || !textoLimpo.Any(char.IsUpper))
+            return Result<Senha>.Failure("Senha", "SENHA_FORMATO");
+
+        return Result<Senha>.Success(new Senha(textoLimpo));
+    }
+
+    public override string ToString() => Valor;
 }

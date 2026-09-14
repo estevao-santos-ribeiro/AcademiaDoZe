@@ -1,159 +1,63 @@
-﻿// Estevão Santos Ribeiro
-
-using System.Collections.Generic;
+// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 using AcademiaDoZe.Domain.Services;
 using AcademiaDoZe.Domain.ValueObjects;
 
-namespace AcademiaDoZe.Domain.Entities
+namespace AcademiaDoZe.Domain.Entities;
+
+public class Aluno : Pessoa, IAggregateRoot
 {
-    public class Aluno : Pessoa
+    // construtor privado para evitar instância direta
+    private Aluno(int id,string nome,Cpf cpf,DateOnly dataNascimento, Telefone telefone, Email email, Endereco endereco, Senha senha, Arquivo foto) : base(id, nome, cpf, dataNascimento, telefone, email, endereco, senha, foto) {}
+
+    // método de fábrica, ponto de entrada para criar um objeto válido
+    public static Result<Aluno> Criar(int id, string nome, string cpf, DateOnly dataNascimento, string telefone, string email, Logradouro endereco, string numero, string complemento, string senha, Arquivo foto)
     {
-        private readonly List<Matricula> _matriculas = new();
+        var notifications = new List<Notification>();
 
-        private Aluno(
-            Guid id,
-            string nome,
-            DateTime dataNascimento,
-            Cpf cpf,
-            Email email,
-            Telefone telefone,
-            Endereco endereco,
-            DateTime dataIngresso,
-            string numeroMatricula,
-            Arquivo? foto)
-            : base(id, nome, dataNascimento, cpf, email, telefone, endereco, foto)
-        {
-            DataIngresso = dataIngresso;
-            NumeroMatricula = numeroMatricula;
-        }
+        // Validações e normalizações
+        if (NormalizacaoService.TextoVazioOuNulo(nome))
+            notifications.Add(new Notification("Nome", "NOME_OBRIGATORIO"));
+        else
+            nome = NormalizacaoService.LimparEspacos(nome);
 
-        public DateTime DataIngresso { get; private set; }
+        if (dataNascimento == default)
+            notifications.Add(new Notification("DataNascimento", "DATA_NASCIMENTO_OBRIGATORIO"));
+        else if (dataNascimento > DateOnly.FromDateTime(DateTime.Today.AddYears(-12)))
+            notifications.Add(new Notification("DataNascimento", "DATA_NASCIMENTO_MINIMA_INVALIDA"));
 
-        public string NumeroMatricula { get; private set; }
+        // Instanciação e validação via Value Objects
+        var cpfResult = Cpf.Criar(cpf);
+        if (cpfResult.IsFailure) notifications.AddRange(cpfResult.Notifications);
 
-        public IReadOnlyCollection<Matricula> Matriculas => _matriculas.AsReadOnly();
+        var telefoneResult = Telefone.Criar(telefone);
+        if (telefoneResult.IsFailure) notifications.AddRange(telefoneResult.Notifications);
 
-        public static Result<Aluno> Criar(
-            string? nome,
-            DateTime dataNascimento,
-            string? cpf,
-            string? email,
-            string? telefoneDdd,
-            string? telefoneNumero,
-            Guid? logradouroId,
-            string? enderecoCep,
-            string? enderecoNumero,
-            string? enderecoComplemento,
-            DateTime dataIngresso,
-            string? numeroMatricula,
-            byte[]? fotoConteudo = null,
-            string? fotoNome = null,
-            string? fotoContentType = null)
-        {
-            return Criar(
-                Guid.NewGuid(),
-                nome,
-                dataNascimento,
-                cpf,
-                email,
-                telefoneDdd,
-                telefoneNumero,
-                logradouroId,
-                enderecoCep,
-                enderecoNumero,
-                enderecoComplemento,
-                dataIngresso,
-                numeroMatricula,
-                fotoConteudo,
-                fotoNome,
-                fotoContentType);
-        }
+        var emailResult = Email.Criar(email);
+        if (emailResult.IsFailure) notifications.AddRange(emailResult.Notifications);
 
-        public static Result<Aluno> Criar(
-            Guid id,
-            string? nome,
-            DateTime dataNascimento,
-            string? cpf,
-            string? email,
-            string? telefoneDdd,
-            string? telefoneNumero,
-            Guid? logradouroId,
-            string? enderecoCep,
-            string? enderecoNumero,
-            string? enderecoComplemento,
-            DateTime dataIngresso,
-            string? numeroMatricula,
-            byte[]? fotoConteudo = null,
-            string? fotoNome = null,
-            string? fotoContentType = null)
-        {
-            var resultPessoa = Pessoa.Criar(
-                id,
-                nome,
-                dataNascimento,
-                cpf,
-                email,
-                telefoneDdd,
-                telefoneNumero,
-                logradouroId,
-                enderecoCep,
-                enderecoNumero,
-                enderecoComplemento,
-                fotoConteudo,
-                fotoNome,
-                fotoContentType);
+        var senhaResult = Senha.Criar(senha);
+        if (senhaResult.IsFailure) notifications.AddRange(senhaResult.Notifications);
 
-            var notifications = new List<Notification>();
+        var enderecoResult = Endereco.Criar(endereco, numero, complemento);
+        if (enderecoResult.IsFailure) notifications.AddRange(enderecoResult.Notifications);
 
-            if (!resultPessoa.IsSuccess)
-            {
-                notifications.AddRange(resultPessoa.Notifications);
-            }
+        if (notifications.Count != 0)
+            return Result<Aluno>.Failure(notifications);
 
-            var numMatriculaNormalizado = Normalizer.NormalizeString(numeroMatricula);
+        // criação e retorno do objeto
+        var aluno = new Aluno(
+            id,
+            nome,
+            cpfResult.Value!,
+            dataNascimento,
+            telefoneResult.Value!,
+            emailResult.Value!,
+            enderecoResult.Value!,
+            senhaResult.Value!,
+            foto
+        );
 
-            if (dataIngresso == default)
-            {
-                notifications.Add(Notification.Create(nameof(DataIngresso), "Data de ingresso é obrigatória."));
-            }
-            else if (dataIngresso > DateTime.Today)
-            {
-                notifications.Add(Notification.Create(nameof(DataIngresso), "Data de ingresso não pode ser no futuro."));
-            }
-
-            if (string.IsNullOrWhiteSpace(numMatriculaNormalizado))
-            {
-                notifications.Add(Notification.Create(nameof(NumeroMatricula), "Número de matrícula é obrigatório."));
-            }
-
-            if (notifications.Any())
-            {
-                return Result<Aluno>.Failure(notifications);
-            }
-
-            var pessoa = resultPessoa.Value!;
-            var aluno = new Aluno(
-                pessoa.Id,
-                pessoa.Nome,
-                pessoa.DataNascimento,
-                pessoa.Cpf,
-                pessoa.Email,
-                pessoa.Telefone,
-                pessoa.Endereco,
-                dataIngresso,
-                numMatriculaNormalizado,
-                pessoa.Foto);
-
-            return Result<Aluno>.Success(aluno);
-        }
-
-        public void AdicionarMatricula(Matricula matricula)
-        {
-            if (matricula == null)
-                throw new ArgumentNullException(nameof(matricula));
-
-            _matriculas.Add(matricula);
-        }
+        return Result<Aluno>.Success(aluno);
     }
 }

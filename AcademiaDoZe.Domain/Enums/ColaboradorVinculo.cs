@@ -1,12 +1,8 @@
-﻿// Estevão Santos Ribeiro
+// Estevão Santos Ribeiro
+namespace AcademiaDoZe.Domain.Enums;
 
-namespace AcademiaDoZe.Domain.Enums
+public enum ColaboradorVinculo
 {
-    public enum ColaboradorVinculo
-    {
-        CLT = 1,
-        PJ = 2,
-        Estagiario = 3,
-        Terceirizado = 4
-    }
+    CLT = 0,
+    Estagio = 1
 }
