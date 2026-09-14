@@ -1,13 +1,9 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 using AcademiaDoZe.Domain.Entities;
 
 namespace AcademiaDoZe.Domain.Repositories;
 
-// Interface genérica para repositórios. Restrita apenas a Raízes de Agregado (Aggregate Roots) no DDD.
-// Define os contratos essenciais para a persistência de dados.
-// Herda de Entity para garantir que TEntity seja uma entidade válida, e seu uso somente no domain.
-// Métodos assíncronos (Task), alinhados com práticas modernas de acesso a dados.
 public interface IRepository<TEntity> where TEntity : Entity, IAggregateRoot
 {
     Task<TEntity?> ObterPorId(int id, CancellationToken cancellationToken = default);

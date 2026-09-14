@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.Enums;
 using AcademiaDoZe.Domain.ValueObjects;
@@ -49,13 +49,13 @@ public class AcessoColaboradorTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "DATA_HORA_INTERVALO_INVALIDO");
     }
 
-    [Theory(DisplayName = "AcessoColaborador: criação bem-sucedida em horários permitidos")]
+    [Theory(DisplayName = "AcessoColaborador: criaÃ§Ã£o bem-sucedida em horÃ¡rios permitidos")]
     [InlineData(10)]
     [InlineData(14)]
     public void Deve_Criar_Com_Sucesso_Quando_HorarioValido(int hour)
     {
         var colaborador = GetValidColaborador();
-        var dataHora = DateTime.Today.AddHours(hour); // 10:00 or 14:00
+        var dataHora = DateTime.Today.AddHours(hour);
         var result = AcessoColaborador.Criar(1, colaborador, dataHora);
 
         Assert.True(result.IsSuccess);
@@ -63,7 +63,7 @@ public class AcessoColaboradorTests
         Assert.Equal(dataHora, result.Value.DataHora);
     }
 
-    [Theory(DisplayName = "AcessoColaborador: permite horários de borda 06:00 e 22:00")]
+    [Theory(DisplayName = "AcessoColaborador: permite horÃ¡rios de borda 06:00 e 22:00")]
     [InlineData(6)]
     [InlineData(22)]
     public void Deve_Permitir_HorariosDeBorda_06_00_e_22_00(int hour)

@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 
 namespace AcademiaDoZe.Domain.Entities;
@@ -30,6 +30,3 @@ public class AcessoColaborador : Entity, IAggregateRoot
         return Result<AcessoColaborador>.Success(new AcessoColaborador(id, colaborador!.Id, dataHora));
     }
 }
-// Dependem da persistência:
-// Validar se já não ultrapassa o limite de:  8 horas se for ctl, 6 horas se for estágio.
-// Na saída, mostrar o tempo que permaneceu na academia, devendo ser somado todos os registros do dia.

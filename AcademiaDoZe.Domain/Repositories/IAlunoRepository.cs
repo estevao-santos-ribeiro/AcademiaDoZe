@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.ValueObjects;
 
@@ -6,7 +6,6 @@ namespace AcademiaDoZe.Domain.Repositories;
 
 public interface IAlunoRepository : IRepository<Aluno>
 {
-    // Métodos específicos do domínio
     Task<Aluno?> ObterPorCpf(Cpf cpf, CancellationToken cancellationToken = default);
     Task<Aluno?> ObterPorEmail(Email email, CancellationToken cancellationToken = default);
     Task<bool> CpfJaExiste(Cpf cpf, int? id = null, CancellationToken cancellationToken = default);

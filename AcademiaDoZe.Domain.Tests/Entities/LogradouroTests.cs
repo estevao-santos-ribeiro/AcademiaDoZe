@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.ValueObjects;
 
@@ -18,7 +18,7 @@ public class LogradouroTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "NOME_OBRIGATORIO");
     }
 
-    [Theory(DisplayName = "Logradouro: normaliza estado removendo espaços e upper")]
+    [Theory(DisplayName = "Logradouro: normaliza estado removendo espaÃ§os e upper")]
     [InlineData(" s p ", "SP")]
     [InlineData(" sp ", "SP")]
     [InlineData("Sp", "SP")]
@@ -30,7 +30,7 @@ public class LogradouroTests
         Assert.Equal(expected, result.Value!.Estado);
     }
 
-    [Theory(DisplayName = "Logradouro: campos obrigatórios vazios -> mensagens específicas")]
+    [Theory(DisplayName = "Logradouro: campos obrigatÃ³rios vazios -> mensagens especÃ­ficas")]
     [InlineData("", "Bairro", "Cidade", "SP", "Brasil", "NOME_OBRIGATORIO")]
     [InlineData("Rua", "", "Cidade", "SP", "Brasil", "BAIRRO_OBRIGATORIO")]
     [InlineData("Rua", "Bairro", "", "SP", "Brasil", "CIDADE_OBRIGATORIO")]

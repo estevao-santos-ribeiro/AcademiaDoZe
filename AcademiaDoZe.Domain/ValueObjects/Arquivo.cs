@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 
 namespace AcademiaDoZe.Domain.ValueObjects;
@@ -17,11 +17,10 @@ public record Arquivo
         if (conteudo == null)
             return Result<Arquivo>.Failure("Arquivo", "ARQUIVO_OBRIGATORIO");
 
-        const int tamanhoMaximoBytes = 15 * 1024 * 1024; // 15MB
+        const int tamanhoMaximoBytes = 15 * 1024 * 1024;
         if (conteudo.Length > tamanhoMaximoBytes)
             return Result<Arquivo>.Failure("Arquivo", "ARQUIVO_TIPO_TAMANHO");
 
-        // cria e retorna o objeto
         return Result<Arquivo>.Success(new Arquivo(conteudo));
     }
 }

@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.Enums;
 using AcademiaDoZe.Domain.ValueObjects;
@@ -12,10 +12,10 @@ public class MatriculaTests
     private static Aluno GetValidAluno(DateOnly? dataNascimento = null)
     {
         var nascimento = dataNascimento ?? DateOnly.FromDateTime(DateTime.Today.AddYears(-20));
-        return Aluno.Criar(1, "João da Silva", "529.982.247-25", nascimento, "(11) 91234-5678", "user@example.com", GetValidLogradouro(), "123", string.Empty, "Abcdef", GetValidArquivo()).Value!;
+        return Aluno.Criar(1, "JoÃ£o da Silva", "529.982.247-25", nascimento, "(11) 91234-5678", "user@example.com", GetValidLogradouro(), "123", string.Empty, "Abcdef", GetValidArquivo()).Value!;
     }
 
-    [Theory(DisplayName = "Matricula: plano inválido -> PLANO_INVALIDO; válido -> sucesso")]
+    [Theory(DisplayName = "Matricula: plano invÃ¡lido -> PLANO_INVALIDO; vÃ¡lido -> sucesso")]
     [InlineData(999)]
     [InlineData((int)MatriculaPlano.Mensal)]
     public void Deve_FalharOuPassar_Criacao_Quando_ValorDoPlano(int planoValue)
@@ -37,7 +37,7 @@ public class MatriculaTests
         }
     }
 
-    [Theory(DisplayName = "Matricula: data inicio obrigatória -> DATA_INICIO_OBRIGATORIO")]
+    [Theory(DisplayName = "Matricula: data inicio obrigatÃ³ria -> DATA_INICIO_OBRIGATORIO")]
     [InlineData(true)]
     [InlineData(false)]
     public void Deve_Falhar_Criacao_Quando_DataInicioPadrao(bool useDefault)
@@ -73,7 +73,7 @@ public class MatriculaTests
         Assert.Equal(inicio.AddMonths(meses), result.Value!.DataFim);
     }
 
-    [Theory(DisplayName = "Matricula: restrições -> quando presentes, laudo e observações devem existir")]
+    [Theory(DisplayName = "Matricula: restriÃ§Ãµes -> quando presentes, laudo e observaÃ§Ãµes devem existir")]
     [InlineData(MatriculaRestricoes.None, true)]
     [InlineData(MatriculaRestricoes.Diabetes, true)]
     [InlineData(MatriculaRestricoes.Diabetes | MatriculaRestricoes.Alergias, true)]
@@ -127,7 +127,7 @@ public class MatriculaTests
         }
     }
 
-    [Theory(DisplayName = "Matricula: restrições sem laudo -> RESTRICOES_LAUDO_OBRIGATORIO quando aplicável")]
+    [Theory(DisplayName = "Matricula: restriÃ§Ãµes sem laudo -> RESTRICOES_LAUDO_OBRIGATORIO quando aplicÃ¡vel")]
     [InlineData(true)]
     [InlineData(false)]
     public void Deve_Falhar_Criacao_Quando_RestricoesSemLaudo(bool provideLaudo)
@@ -158,7 +158,7 @@ public class MatriculaTests
         }
     }
 
-    [Theory(DisplayName = "Matricula: normaliza observações de restrições removendo espaços extras")]
+    [Theory(DisplayName = "Matricula: normaliza observaÃ§Ãµes de restriÃ§Ãµes removendo espaÃ§os extras")]
     [InlineData(" observa testo ", "observa testo")]
     [InlineData(" obs outro ", "obs outro")]
     public void Deve_Normalizar_ObservacoesRestricoes_Quando_InputTemEspacosExtras(string input, string expected)

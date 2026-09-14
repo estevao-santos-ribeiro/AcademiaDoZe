@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.ValueObjects;
 
@@ -9,8 +9,8 @@ public class AlunoTests
     private static Logradouro GetValidLogradouro() => Logradouro.Criar(1, "12345-678", "Rua Teste", "Bairro", "Cidade", "SP", "Brasil").Value!;
     private static Arquivo GetValidArquivo() => Arquivo.Criar(new byte[] { 1, 2, 3 }).Value!;
 
-    [Theory(DisplayName = "Aluno: criação bem-sucedida com nomes válidos (trim aplicado)")]
-    [InlineData(" João da Silva ")]
+    [Theory(DisplayName = "Aluno: criaÃ§Ã£o bem-sucedida com nomes vÃ¡lidos (trim aplicado)")]
+    [InlineData(" JoÃ£o da Silva ")]
     [InlineData("Maria")]
     [InlineData("  Test User ")]
     public void Deve_Criar_Com_Sucesso_Quando_NomeValido(string nome)
@@ -58,7 +58,7 @@ public class AlunoTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "NOME_OBRIGATORIO");
     }
 
-    [Theory(DisplayName = "Aluno: data nascimento -> obrigatoriedade e idade mínima")]
+    [Theory(DisplayName = "Aluno: data nascimento -> obrigatoriedade e idade mÃ­nima")]
     [InlineData("default", "DATA_NASCIMENTO_OBRIGATORIO")]
     [InlineData("under12", "DATA_NASCIMENTO_MINIMA_INVALIDA")]
     [InlineData("under12-1", "DATA_NASCIMENTO_MINIMA_INVALIDA")]
@@ -72,7 +72,7 @@ public class AlunoTests
 
         var result = Aluno.Criar(
             1,
-            "João",
+            "JoÃ£o",
             "529.982.247-25",
             dataParam,
             "(11) 91234-5678",

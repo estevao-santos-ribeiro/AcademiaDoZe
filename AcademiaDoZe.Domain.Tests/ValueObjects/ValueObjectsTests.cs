@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.ValueObjects;
 using System.Linq;
@@ -7,8 +7,7 @@ namespace AcademiaDoZe.Domain.Tests.ValueObjects;
 
 public class ValueObjectsTests
 {
-    // Cep tests
-    [Theory(DisplayName = "Cep: dígitos inválidos -> CEP_DIGITOS")]
+    [Theory(DisplayName = "Cep: dÃ­gitos invÃ¡lidos -> CEP_DIGITOS")]
     [InlineData("123")]
     [InlineData("12-345")]
     [InlineData("1234567A")]
@@ -21,7 +20,7 @@ public class ValueObjectsTests
         Assert.NotEmpty(result.Notifications);
     }
 
-    [Theory(DisplayName = "Cep: formatos válidos (com e sem hífen)")]
+    [Theory(DisplayName = "Cep: formatos vÃ¡lidos (com e sem hÃ­fen)")]
     [InlineData("12345-678")]
     [InlineData("12345678")]
     [InlineData(" 12345-678 ")]
@@ -33,7 +32,7 @@ public class ValueObjectsTests
         Assert.Equal("12345678", result.Value!.Valor);
     }
 
-    [Theory(DisplayName = "Cep: obrigatório -> CEP_OBRIGATORIO")]
+    [Theory(DisplayName = "Cep: obrigatÃ³rio -> CEP_OBRIGATORIO")]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
@@ -44,8 +43,7 @@ public class ValueObjectsTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "CEP_OBRIGATORIO");
     }
 
-    // Endereco tests
-    [Theory(DisplayName = "Endereco: criação válida com número e complemento")]
+    [Theory(DisplayName = "Endereco: criaÃ§Ã£o vÃ¡lida com nÃºmero e complemento")]
     [InlineData("10", "Bloco A")]
     [InlineData("1", "")]
     [InlineData(" S/N ", " Fundos ")]
@@ -60,7 +58,7 @@ public class ValueObjectsTests
         Assert.Equal(complemento?.Trim() ?? "", result.Value.Complemento);
     }
 
-    [Theory(DisplayName = "Endereco: valida obrigatoriedade do logradouro e número")]
+    [Theory(DisplayName = "Endereco: valida obrigatoriedade do logradouro e nÃºmero")]
     [InlineData(null, "1", "LOGRADOURO_OBRIGATORIO")]
     [InlineData("valid", "", "NUMERO_OBRIGATORIO")]
     [InlineData("valid", "   ", "NUMERO_OBRIGATORIO")]
@@ -75,8 +73,7 @@ public class ValueObjectsTests
         Assert.Contains(result.Notifications, n => n.Mensagem == expected);
     }
 
-    // Cpf tests
-    [Theory(DisplayName = "Cpf: nulo/vazio/espaços -> CPF_OBRIGATORIO")]
+    [Theory(DisplayName = "Cpf: nulo/vazio/espaÃ§os -> CPF_OBRIGATORIO")]
     [InlineData(null)]
     [InlineData("")]
     [InlineData(" ")]
@@ -89,7 +86,7 @@ public class ValueObjectsTests
         Assert.Equal("CPF_OBRIGATORIO", result.Notifications.First().Mensagem);
     }
 
-    [Theory(DisplayName = "Cpf: formatos válidos (com e sem pontuação)")]
+    [Theory(DisplayName = "Cpf: formatos vÃ¡lidos (com e sem pontuaÃ§Ã£o)")]
     [InlineData("529.982.247-25")]
     [InlineData("52998224725")]
     [InlineData(" 529.982.247-25 ")]
@@ -101,7 +98,7 @@ public class ValueObjectsTests
         Assert.Equal("52998224725", result.Value!.Valor);
     }
 
-    [Theory(DisplayName = "Cpf: inválido - dígitos incorreto -> CPF_DIGITOS")]
+    [Theory(DisplayName = "Cpf: invÃ¡lido - dÃ­gitos incorreto -> CPF_DIGITOS")]
     [InlineData("123")]
     [InlineData("111.111.111-1")]
     [InlineData("1234567890")]
@@ -112,7 +109,7 @@ public class ValueObjectsTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "CPF_DIGITOS");
     }
 
-    [Theory(DisplayName = "Cpf: sem dígitos -> CPF_DIGITOS")]
+    [Theory(DisplayName = "Cpf: sem dÃ­gitos -> CPF_DIGITOS")]
     [InlineData(" dfgdf ")]
     [InlineData("abc")]
     [InlineData("!!@@")]
@@ -124,8 +121,7 @@ public class ValueObjectsTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "CPF_DIGITOS");
     }
 
-    // Telefone tests
-    [Theory(DisplayName = "Telefone: dígitos inválidos -> TELEFONE_DIGITOS")]
+    [Theory(DisplayName = "Telefone: dÃ­gitos invÃ¡lidos -> TELEFONE_DIGITOS")]
     [InlineData("1234")]
     [InlineData("(1)2345")]
     [InlineData("119123456789")]
@@ -138,7 +134,7 @@ public class ValueObjectsTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "TELEFONE_DIGITOS");
     }
 
-    [Theory(DisplayName = "Telefone: formatos válidos (com e sem formatação)")]
+    [Theory(DisplayName = "Telefone: formatos vÃ¡lidos (com e sem formataÃ§Ã£o)")]
     [InlineData("(11) 91234-5678")]
     [InlineData("11912345678")]
     [InlineData(" 11912345678 ")]
@@ -148,7 +144,7 @@ public class ValueObjectsTests
         Assert.True(result.IsSuccess);
     }
 
-    [Theory(DisplayName = "Telefone: obrigatório -> TELEFONE_OBRIGATORIO")]
+    [Theory(DisplayName = "Telefone: obrigatÃ³rio -> TELEFONE_OBRIGATORIO")]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
@@ -159,20 +155,19 @@ public class ValueObjectsTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "TELEFONE_OBRIGATORIO");
     }
 
-    // Senha tests
     [Theory(DisplayName = "Senha: valida requisito de uppercase")]
     [InlineData("abcdef", false)]
     [InlineData("Abcdef", true)]
     [InlineData("12345a", false)]
     [InlineData("12345A", true)]
-    [InlineData("A1234", false)] // < 6 chars
+    [InlineData("A1234", false)]
     public void Deve_Validar_RequisitoUppercase_Senha(string senha, bool isSuccess)
     {
         var result = Senha.Criar(senha);
         Assert.Equal(isSuccess, result.IsSuccess);
     }
 
-    [Theory(DisplayName = "Senha: obrigatório -> SENHA_OBRIGATORIO")]
+    [Theory(DisplayName = "Senha: obrigatÃ³rio -> SENHA_OBRIGATORIO")]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
@@ -183,8 +178,7 @@ public class ValueObjectsTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "SENHA_OBRIGATORIO");
     }
 
-    // Email tests
-    [Theory(DisplayName = "Email: formatos inválidos")]
+    [Theory(DisplayName = "Email: formatos invÃ¡lidos")]
     [InlineData("email.com")]
     [InlineData("@email.com")]
     [InlineData("email@")]
@@ -198,7 +192,7 @@ public class ValueObjectsTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "EMAIL_FORMATO");
     }
 
-    [Theory(DisplayName = "Email: formatos válidos")]
+    [Theory(DisplayName = "Email: formatos vÃ¡lidos")]
     [InlineData("test@example.com")]
     [InlineData("user.name@domain.co")]
     [InlineData(" user@domain.com ")]
@@ -208,7 +202,7 @@ public class ValueObjectsTests
         Assert.True(result.IsSuccess);
     }
 
-    [Theory(DisplayName = "Email: obrigatório")]
+    [Theory(DisplayName = "Email: obrigatÃ³rio")]
     [InlineData(null)]
     [InlineData("")]
     [InlineData("   ")]
@@ -219,7 +213,6 @@ public class ValueObjectsTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "EMAIL_FORMATO");
     }
 
-    // Arquivo tests
     [Fact(DisplayName = "Arquivo: obrigatorio nulo")]
     public void Deve_Falhar_Criacao_Quando_ArquivoNulo()
     {

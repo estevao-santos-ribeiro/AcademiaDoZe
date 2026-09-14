@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Services;
 
 namespace AcademiaDoZe.Domain.Tests.Services;
@@ -17,7 +17,7 @@ public class NormalizacaoServiceTests
         Assert.Equal(expected, result);
     }
 
-    [Theory(DisplayName = "NormalizacaoService: LimparEspacos -> normaliza espaços")]
+    [Theory(DisplayName = "NormalizacaoService: LimparEspacos -> normaliza espaÃ§os")]
     [InlineData(null, "")]
     [InlineData("", "")]
     [InlineData(" a b c ", "a b c")]
@@ -29,7 +29,7 @@ public class NormalizacaoServiceTests
         Assert.Equal(expected, result);
     }
 
-    [Theory(DisplayName = "NormalizacaoService: LimparTodosEspacos -> remove todos os espaços")]
+    [Theory(DisplayName = "NormalizacaoService: LimparTodosEspacos -> remove todos os espaÃ§os")]
     [InlineData(null, "")]
     [InlineData("", "")]
     [InlineData("a b c", "abc")]
@@ -41,11 +41,11 @@ public class NormalizacaoServiceTests
         Assert.Equal(expected, result);
     }
 
-    [Theory(DisplayName = "NormalizacaoService: ParaMaiusculo -> converte para maiúsculo")]
+    [Theory(DisplayName = "NormalizacaoService: ParaMaiusculo -> converte para maiÃºsculo")]
     [InlineData(null, "")]
     [InlineData("", "")]
     [InlineData("abc", "ABC")]
-    [InlineData("áéíõç", "ÁÉÍÕÇ")]
+    [InlineData("Ã¡Ã©Ã­ÃµÃ§", "ÃÃ‰ÃÃ•Ã‡")]
     [InlineData("Mixed", "MIXED")]
     public void Deve_Converter_Para_Maiusculo_Quando_ParaMaiusculoChamado(string? input, string expected)
     {
@@ -53,7 +53,7 @@ public class NormalizacaoServiceTests
         Assert.Equal(expected, result);
     }
 
-    [Theory(DisplayName = "NormalizacaoService: LimparEDigitos -> mantém apenas dígitos")]
+    [Theory(DisplayName = "NormalizacaoService: LimparEDigitos -> mantÃ©m apenas dÃ­gitos")]
     [InlineData(null, "")]
     [InlineData("", "")]
     [InlineData("a1b2c3", "123")]

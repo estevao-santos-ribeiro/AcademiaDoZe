@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.ValueObjects;
 
@@ -10,7 +10,7 @@ public class AcessoAlunoTests
     private static Arquivo GetValidArquivo() => Arquivo.Criar(new byte[] { 1, 2, 3 }).Value!;
     private static Aluno GetValidAluno() => Aluno.Criar(
             1,
-            "João",
+            "JoÃ£o",
             "529.982.247-25",
             DateOnly.FromDateTime(DateTime.Today.AddYears(-20)),
             "(11) 91234-5678",
@@ -56,13 +56,13 @@ public class AcessoAlunoTests
         Assert.Contains(result.Notifications, n => n.Mensagem == "DATA_HORA_INTERVALO_INVALIDO");
     }
 
-    [Theory(DisplayName = "AcessoAluno: criação bem-sucedida em horários permitidos")]
+    [Theory(DisplayName = "AcessoAluno: criaÃ§Ã£o bem-sucedida em horÃ¡rios permitidos")]
     [InlineData(10)]
     [InlineData(11)]
     public void Deve_Criar_Com_Sucesso_Quando_HorarioValido(int hour)
     {
         var aluno = GetValidAluno();
-        var dataHora = DateTime.Today.AddHours(hour); // 10:00 or 11:00
+        var dataHora = DateTime.Today.AddHours(hour);
         var result = AcessoAluno.Criar(1, aluno, dataHora);
 
         Assert.True(result.IsSuccess);
@@ -70,7 +70,7 @@ public class AcessoAlunoTests
         Assert.Equal(dataHora, result.Value.DataHora);
     }
 
-    [Theory(DisplayName = "AcessoAluno: permite horários de borda 06:00 e 22:00")]
+    [Theory(DisplayName = "AcessoAluno: permite horÃ¡rios de borda 06:00 e 22:00")]
     [InlineData(6)]
     [InlineData(22)]
     public void Deve_Permitir_HorariosDeBorda_06_00_e_22_00(int hour)

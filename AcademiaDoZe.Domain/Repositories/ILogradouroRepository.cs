@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.ValueObjects;
 
@@ -6,7 +6,6 @@ namespace AcademiaDoZe.Domain.Repositories;
 
 public interface ILogradouroRepository : IRepository<Logradouro>
 {
-    // Métodos específicos do domínio
     Task<Logradouro?> ObterPorCep(Cep cep, CancellationToken cancellationToken = default);
     Task<bool> CepJaExiste(Cep cep, int? id = null, CancellationToken cancellationToken = default);
     Task<IEnumerable<Logradouro>> ObterPorCidade(string cidade, CancellationToken cancellationToken = default);

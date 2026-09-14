@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 using AcademiaDoZe.Domain.Enums;
 using AcademiaDoZe.Domain.Services;
@@ -8,12 +8,10 @@ namespace AcademiaDoZe.Domain.Entities;
 
 public class Colaborador : Pessoa, IAggregateRoot
 {
-    // encapsulamento das propriedades, aplicando imutabilidade
     public DateOnly DataAdmissao { get; private set; }
     public ColaboradorTipo Tipo { get; private set; }
     public ColaboradorVinculo Vinculo { get; private set; }
 
-    // construtor privado para evitar instância direta
     private Colaborador(int id, string nome, Cpf cpf, DateOnly dataNascimento, Telefone telefone, Email email, Endereco endereco, Senha senha, Arquivo foto, DateOnly dataAdmissao,
         ColaboradorTipo tipo, ColaboradorVinculo vinculo) : base(id, nome, cpf, dataNascimento, telefone, email, endereco, senha, foto)
     {
@@ -22,7 +20,6 @@ public class Colaborador : Pessoa, IAggregateRoot
         Vinculo = vinculo;
     }
 
-    // método de fábrica, ponto de entrada para criar um objeto válido
     public static Result<Colaborador> Criar(int id, string nome, string cpf, DateOnly dataNascimento, string telefone, string email, Logradouro endereco, string numero, string complemento, string senha, Arquivo foto,
         DateOnly dataAdmissao, ColaboradorTipo tipo, ColaboradorVinculo vinculo)
     {
@@ -42,7 +39,6 @@ public class Colaborador : Pessoa, IAggregateRoot
 
         if (Enum.IsDefined(tipo) && Enum.IsDefined(vinculo) && tipo == ColaboradorTipo.Administrador && vinculo != ColaboradorVinculo.CLT) notifications.Add(new Notification("Vinculo", "ADMINISTRADOR_CLT_INVALIDO"));
 
-        // Instanciação e validação via Value Objects
         var cpfResult = Cpf.Criar(cpf);
         if (cpfResult.IsFailure) notifications.AddRange(cpfResult.Notifications);
 
@@ -61,7 +57,6 @@ public class Colaborador : Pessoa, IAggregateRoot
         if (notifications.Count != 0)
             return Result<Colaborador>.Failure(notifications);
 
-        // criação e retorno do objeto
         var colaborador = new Colaborador(id, nome, cpfResult.Value!, dataNascimento, telefoneResult.Value!, emailResult.Value!, enderecoResult.Value!, senhaResult.Value!, foto, dataAdmissao, tipo, vinculo);
 
         return Result<Colaborador>.Success(colaborador);

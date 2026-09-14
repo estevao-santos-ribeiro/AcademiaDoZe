@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 using AcademiaDoZe.Domain.Services;
 using AcademiaDoZe.Domain.ValueObjects;
@@ -7,7 +7,6 @@ namespace AcademiaDoZe.Domain.Entities;
 
 public sealed class Logradouro : Entity, IAggregateRoot
 {
-    // encapsulamento das propriedades, aplicando imutabilidade
     public Cep Cep { get; }
     public string Nome { get; }
     public string Bairro { get; }

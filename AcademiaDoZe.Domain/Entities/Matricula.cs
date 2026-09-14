@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 using AcademiaDoZe.Domain.Enums;
 using AcademiaDoZe.Domain.Services;
@@ -8,7 +8,6 @@ namespace AcademiaDoZe.Domain.Entities;
 
 public class Matricula : Entity, IAggregateRoot
 {
-    // encapsulamento das propriedades, aplicando imutabilidade
     public int AlunoId { get; private set; }
     public MatriculaPlano Plano { get; private set; }
     public DateOnly DataInicio { get; private set; }
@@ -18,7 +17,6 @@ public class Matricula : Entity, IAggregateRoot
     public string ObservacoesRestricoes { get; private set; }
     public Arquivo? LaudoMedico { get; private set; }
 
-    // construtor privado para evitar instância direta
     private Matricula(int id, int alunoId, MatriculaPlano plano, DateOnly dataInicio, DateOnly dataFim, string objetivo, MatriculaRestricoes restricoesMedicas, Arquivo? laudoMedico, string observacoesRestricoes = "") : base(id)
     {
         AlunoId = alunoId;
@@ -31,12 +29,10 @@ public class Matricula : Entity, IAggregateRoot
         ObservacoesRestricoes = observacoesRestricoes;
     }
 
-    // método de fábrica, ponto de entrada para criar um ojeto válido
     public static Result<Matricula> Criar(int id, Aluno aluno, MatriculaPlano plano, DateOnly dataInicio, string objetivo, MatriculaRestricoes restricoesMedicas, Arquivo? laudoMedico, string observacoesRestricoes = "")
     {
         var notifications = new List<Notification>();
 
-        // Validações e normalizações
         if (aluno == null)
         {
             notifications.Add(new Notification("Aluno", "ALUNO_INVALIDO"));
@@ -49,7 +45,6 @@ public class Matricula : Entity, IAggregateRoot
         if (!Enum.IsDefined(plano)) notifications.Add(new Notification("Plano", "PLANO_INVALIDO"));
         if (dataInicio == default) notifications.Add(new Notification("DataInicio", "DATA_INICIO_OBRIGATORIO"));
 
-        // Cálculo da DataFim no domínio baseado no tipo de plano
         DateOnly dataFim = default;
         if (Enum.IsDefined(plano) && dataInicio != default)
         {
@@ -72,7 +67,6 @@ public class Matricula : Entity, IAggregateRoot
 
         if (notifications.Count != 0) return Result<Matricula>.Failure(notifications);
 
-        // criação e retorno do objeto
         var matricula = new Matricula(id, aluno!.Id, plano, dataInicio, dataFim, objetivo, restricoesMedicas, laudoMedico, observacoesRestricoes);
 
         return Result<Matricula>.Success(matricula);

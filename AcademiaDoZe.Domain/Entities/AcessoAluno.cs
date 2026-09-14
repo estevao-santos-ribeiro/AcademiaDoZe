@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 
 namespace AcademiaDoZe.Domain.Entities;
@@ -30,7 +30,3 @@ public class AcessoAluno : Entity, IAggregateRoot
         return Result<AcessoAluno>.Success(new AcessoAluno(id, aluno!.Id, dataHora));
     }
 }
-// Dependem da persistência:
-// Validar se possui matrícula ativa
-// Na entrada, mostrar quanto tempo ainda tem de plano
-// Na saída, mostrar o tempo que permaneceu na academia

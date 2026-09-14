@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.Enums;
 using AcademiaDoZe.Domain.ValueObjects;
@@ -10,7 +10,7 @@ public class ColaboradorTests
     private static Logradouro GetValidLogradouro() => Logradouro.Criar(1, "12345-678", "Rua Teste", "Bairro", "Cidade", "SP", "Brasil").Value!;
     private static Arquivo GetValidArquivo() => Arquivo.Criar(new byte[] { 1, 2, 3 }).Value!;
 
-    [Theory(DisplayName = "Colaborador: data admissao obrigatória -> DATA_ADMISSAO_OBRIGATORIO")]
+    [Theory(DisplayName = "Colaborador: data admissao obrigatÃ³ria -> DATA_ADMISSAO_OBRIGATORIO")]
     [InlineData(true)]
     [InlineData(false)]
     public void Deve_Falhar_Criacao_Quando_DataAdmissaoPadrao(bool useDefault)
@@ -30,7 +30,7 @@ public class ColaboradorTests
         }
     }
 
-    [Theory(DisplayName = "Colaborador: Administrador com vinculo inválido -> ADMINISTRADOR_CLT_INVALIDO")]
+    [Theory(DisplayName = "Colaborador: Administrador com vinculo invÃ¡lido -> ADMINISTRADOR_CLT_INVALIDO")]
     [InlineData(ColaboradorTipo.Administrador, ColaboradorVinculo.Estagio)]
     [InlineData(ColaboradorTipo.Administrador, ColaboradorVinculo.CLT)]
     public void Deve_Falhar_Criacao_Quando_AdminComVinculoInvalido(ColaboradorTipo tipo, ColaboradorVinculo vinc)
@@ -70,7 +70,7 @@ public class ColaboradorTests
         }
     }
 
-    [Theory(DisplayName = "Colaborador: tipo ou vínculo inválido -> valida enum inválido")]
+    [Theory(DisplayName = "Colaborador: tipo ou vÃ­nculo invÃ¡lido -> valida enum invÃ¡lido")]
     [InlineData(999, 1)]
     [InlineData(1, 999)]
     [InlineData(888, 888)]

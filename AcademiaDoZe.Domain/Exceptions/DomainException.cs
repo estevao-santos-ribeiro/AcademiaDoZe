@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 
 namespace AcademiaDoZe.Domain.Exceptions
 {

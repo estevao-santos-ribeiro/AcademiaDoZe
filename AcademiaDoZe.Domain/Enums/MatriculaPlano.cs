@@ -1,4 +1,4 @@
-// Estevão Santos Ribeiro
+﻿// Estevão Santos Ribeiro
 namespace AcademiaDoZe.Domain.Enums;
 
 public enum MatriculaPlano
