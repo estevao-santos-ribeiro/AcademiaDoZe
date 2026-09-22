@@ -1,4 +1,7 @@
 ﻿// Estevão Santos Ribeiro
+using AcademiaDoZe.Domain.Common;
+using AcademiaDoZe.Domain.Services;
+
 namespace AcademiaDoZe.Domain.ValueObjects;
 
 public record Telefone
@@ -9,4 +12,18 @@ public record Telefone
     {
         Valor = valor;
     }
+
+    public static Result<Telefone> Criar(string valor)
+    {
+        if (NormalizadoService.TextoVazioOuNulo(valor))
+            return Result<Telefone>.Failure("Telefone", "TELEFONE_OBRIGATORIO");
+
+        var textoLimpo = NormalizadoService.LimparEDigitos(valor);
+        if (textoLimpo.Length != 11)
+            return Result<Telefone>.Failure("Telefone", "TELEFONE_DIGITOS");
+
+        return Result<Telefone>.Success(new Telefone(textoLimpo));
+    }
+
+    public override string ToString() => Valor;
 }
