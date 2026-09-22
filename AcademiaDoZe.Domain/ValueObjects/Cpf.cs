@@ -19,7 +19,7 @@ public record Cpf
         if (string.IsNullOrWhiteSpace(valor))
             notifications.Add(new Notification("Cpf", "CPF_OBRIGATORIO"));
         else
-            valor = NormalizadoService.LimparEspacos(valor);
+            valor = NormalizacaoService.LimparEspacos(valor);
         if (!ValidarCpf(valor))
             notifications.Add(new Notification("Cpf", "CPF_INVALIDO"));
         if (notifications.Any())

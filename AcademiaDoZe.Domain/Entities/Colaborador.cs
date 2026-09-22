@@ -50,10 +50,10 @@ public class Colaborador : Pessoa
     {
         var notifications = new List<Notification>();
 
-        if (NormalizadoService.TextoVazioOuNulo(nome))
+        if (NormalizacaoService.TextoVazioOuNulo(nome))
             notifications.Add(new Notification("Nome", "NOME_OBRIGATORIO"));
         else
-            nome = NormalizadoService.LimparEspacos(nome);
+            nome = NormalizacaoService.LimparEspacos(nome);
 
         if (dataNascimento == default)
             notifications.Add(new Notification("DataNascimento", "DATA_NASCIMENTO_OBRIGATORIO"));

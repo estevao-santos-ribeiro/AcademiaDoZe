@@ -19,7 +19,7 @@ public record Senha
         if (string.IsNullOrWhiteSpace(valor))
             notifications.Add(new Notification("Senha", "SENHA_OBRIGATORIA"));
         else
-            valor = NormalizadoService.LimparEspacos(valor);
+            valor = NormalizacaoService.LimparEspacos(valor);
         if (valor.Length < 6)
             notifications.Add(new Notification("Senha", "SENHA_MINIMO_CARACTERES"));
         if (notifications.Any())
