@@ -9,15 +9,4 @@ public record Senha
     {
         Valor = valor;
     }
-
-    public static Senha Criar(string valor)
-    {
-        if (string.IsNullOrWhiteSpace(valor))
-            throw new Exception("SENHA_INVALIDA");
-
-        if (valor.Length < 6)
-            throw new Exception("SENHA_INVALIDA");
-
-        return new Senha(valor);
-    }
 }

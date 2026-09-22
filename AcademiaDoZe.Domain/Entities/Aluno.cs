@@ -14,7 +14,7 @@ public class Aluno : Pessoa
         Email email,
         Endereco endereco,
         Senha senha,
-        Arquivo? foto)
+        Arquivo foto)
         : base(id, nome, cpf, dataNascimento, telefone, email, endereco, senha, foto)
     {
     }

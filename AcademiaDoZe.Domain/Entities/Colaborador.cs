@@ -19,7 +19,7 @@ public class Colaborador : Pessoa
         Email email,
         Endereco endereco,
         Senha senha,
-        Arquivo? foto,
+        Arquivo foto,
         DateOnly dataAdmissao,
         ColaboradorTipo tipo,
         ColaboradorVinculo vinculo)

@@ -15,15 +15,4 @@ public record Endereco
         Numero = numero;
         Complemento = complemento;
     }
-
-    public static Endereco Criar(Logradouro logradouro, string numero, string? complemento = null)
-    {
-        if (logradouro is null)
-            throw new Exception("ENDERECO_INVALIDO");
-
-        if (string.IsNullOrWhiteSpace(numero))
-            throw new Exception("ENDERECO_INVALIDO");
-
-        return new Endereco(logradouro, numero, complemento);
-    }
 }
