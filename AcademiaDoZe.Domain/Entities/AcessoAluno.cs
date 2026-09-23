@@ -3,7 +3,7 @@ using AcademiaDoZe.Domain.Common;
 
 namespace AcademiaDoZe.Domain.Entities;
 
-public class AcessoAluno : Entity
+public class AcessoAluno : Entity, IAggregateRoot
 {
     public int AlunoId { get; private set; }
     public DateTime DataHora { get; private set; }
