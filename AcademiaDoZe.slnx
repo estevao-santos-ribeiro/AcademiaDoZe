@@ -1,3 +1,7 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+  </Folder>
+  <Project Path="AcademiaDoZe.Domain.Tests/AcademiaDoZe.Domain.Tests.csproj" Id="46c19419-e99d-461f-891d-661453968f43" />
   <Project Path="AcademiaDoZe.Domain/AcademiaDoZe.Domain.csproj" />
 </Solution>

@@ -63,7 +63,7 @@ public class Colaborador : Pessoa, IAggregateRoot
         if (dataAdmissao == default)
             notifications.Add(new Notification("DataAdmissao", "DATA_ADMISSAO_OBRIGATORIO"));
         else if (dataAdmissao > DateOnly.FromDateTime(DateTime.Today))
-            notifications.Add(new Notification("DataAdmissao", "DATA_ADMISSAO_MAIOR_ATUAL"));
+            notifications.Add(new Notification("DataAdmissao", "DATA_ADMISSAO_MAIOR_QUE_ATUAL"));
 
         if (!Enum.IsDefined(tipo))
             notifications.Add(new Notification("Tipo", "TIPO_COLABORADOR_INVALIDO"));

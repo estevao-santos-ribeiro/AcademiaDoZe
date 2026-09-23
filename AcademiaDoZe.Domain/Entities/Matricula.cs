@@ -68,10 +68,10 @@ public class Matricula : Entity, IAggregateRoot
         {
             dataFim = plano switch
             {
-                MatriculaPlano.Mensal => dataFim.AddMonths(1),
-                MatriculaPlano.Trimestral => dataFim.AddMonths(3),
-                MatriculaPlano.Semestral => dataFim.AddMonths(6),
-                MatriculaPlano.Anual => dataFim.AddYears(1),
+                MatriculaPlano.Mensal => dataInicio.AddMonths(1),
+                MatriculaPlano.Trimestral => dataInicio.AddMonths(3),
+                MatriculaPlano.Semestral => dataInicio.AddMonths(6),
+                MatriculaPlano.Anual => dataInicio.AddYears(1),
                 _ => default
             };
         }
@@ -83,6 +83,9 @@ public class Matricula : Entity, IAggregateRoot
             notifications.Add(new Notification("LaudoMedico", "RESTRICOES_LAUDO_OBRIGATORIO"));
 
         observacoesRestricoes = NormalizacaoService.LimparEspacos(observacoesRestricoes);
+
+        if (notifications.Count > 0)
+            return Result<Matricula>.Failure(notifications);
 
         var matricula = new Matricula(id, aluno!.Id, plano, dataInicio, dataFim, objetivo, restricoesMedicas, laudoMedico, observacoesRestricoes);
 
