@@ -1,23 +1,25 @@
 ﻿// Estevão Santos Ribeiro
+using AcademiaDoZe.Domain.Common;
 using AcademiaDoZe.Domain.Enums;
+using AcademiaDoZe.Domain.Services;
 using AcademiaDoZe.Domain.ValueObjects;
 
 namespace AcademiaDoZe.Domain.Entities;
 
-public class Matricula : Entity
+public class Matricula : Entity, IAggregateRoot
 {
-    public Aluno AlunoMatricula { get; private set; }
+    public int AlunoId { get; private set; }
     public MatriculaPlano Plano { get; private set; }
     public DateOnly DataInicio { get; private set; }
     public DateOnly DataFim { get; private set; }
     public string Objetivo { get; private set; }
     public MatriculaRestricoes RestricoesMedicas { get; private set; }
-    public string? ObservacoesRestricoes { get; private set; }
+    public string ObservacoesRestricoes { get; private set; }
     public Arquivo? LaudoMedico { get; private set; }
 
     private Matricula(
         int id,
-        Aluno alunoMatricula,
+        int alunoId,
         MatriculaPlano plano,
         DateOnly dataInicio,
         DateOnly dataFim,
@@ -25,7 +27,7 @@ public class Matricula : Entity
         MatriculaRestricoes restricoesMedicas,
         Arquivo? laudoMedico, string observacoesRestricoes = "") : base(id)
     {
-        AlunoMatricula = alunoMatricula;
+        AlunoId = alunoId;
         Plano = plano;
         DataInicio = dataInicio;
         DataFim = dataFim;
@@ -33,5 +35,57 @@ public class Matricula : Entity
         RestricoesMedicas = restricoesMedicas;
         ObservacoesRestricoes = observacoesRestricoes;
         LaudoMedico = laudoMedico;
+    }
+
+    public static Result<Matricula> Criar(
+        int id,
+        Aluno aluno,
+        MatriculaPlano plano,
+        DateOnly dataInicio,
+        string objetivo,
+        MatriculaRestricoes restricoesMedicas,
+        Arquivo? laudoMedico,
+        string observacoesRestricoes = ""
+    )
+    {
+        var notifications = new List<Notification>();
+
+        if (aluno == null)
+        {
+            notifications.Add(new Notification("Aluno", "ALUNO_INVALIDO"));
+        }
+        else if (aluno.DataNascimento > DateOnly.FromDateTime(DateTime.Today.AddYears(-16)) && laudoMedico == null)
+        {
+            notifications.Add(new Notification("LaudoMedico", "MENOR_16_LAUDO_OBRIGATORIO"));
+        }
+
+        if (!Enum.IsDefined(plano)) notifications.Add(new Notification("Plano", "PLANO_INVALIDO"));
+
+        if (dataInicio == default) notifications.Add(new Notification("DataInicio", "DATA_INICIO_OBRIGATORIO"));
+
+        DateOnly dataFim = default;
+        if (Enum.IsDefined(plano) && dataInicio != default)
+        {
+            dataFim = plano switch
+            {
+                MatriculaPlano.Mensal => dataFim.AddMonths(1),
+                MatriculaPlano.Trimestral => dataFim.AddMonths(3),
+                MatriculaPlano.Semestral => dataFim.AddMonths(6),
+                MatriculaPlano.Anual => dataFim.AddYears(1),
+                _ => default
+            };
+        }
+
+        if (NormalizacaoService.TextoVazioOuNulo(objetivo)) notifications.Add(new Notification("Objetivo", "OBJETIVO_OBRIGATORIO"));
+        else objetivo = NormalizacaoService.LimparEspacos(objetivo);
+
+        if (restricoesMedicas != MatriculaRestricoes.None && laudoMedico == null) 
+            notifications.Add(new Notification("LaudoMedico", "RESTRICOES_LAUDO_OBRIGATORIO"));
+
+        observacoesRestricoes = NormalizacaoService.LimparEspacos(observacoesRestricoes);
+
+        var matricula = new Matricula(id, aluno!.Id, plano, dataInicio, dataFim, objetivo, restricoesMedicas, laudoMedico, observacoesRestricoes);
+
+        return Result<Matricula>.Success(matricula);
     }
 }

@@ -6,7 +6,7 @@ using AcademiaDoZe.Domain.ValueObjects;
 
 namespace AcademiaDoZe.Domain.Entities;
 
-public class Colaborador : Pessoa
+public class Colaborador : Pessoa, IAggregateRoot
 {
     public DateOnly DataAdmissao { get; private set; }
     public ColaboradorTipo Tipo { get; private set; }
