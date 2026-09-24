@@ -1,4 +1,4 @@
-﻿using AcademiaDoZe.Infrastructure.Data;
+using AcademiaDoZe.Infrastructure.Data;
 using AcademiaDoZe.Infrastructure.Exceptions;
 using System.Data;
 using System.Data.Common;
@@ -15,6 +15,7 @@ public abstract class BaseRepository : IDisposable, IAsyncDisposable
     protected BaseRepository(string connectionString, DatabaseType databaseType)
     {
         _connectionString = connectionString ?? throw new InfrastructureException("STRING_CONEXAO_NULA", $"String de conexão não pode ser nula: {nameof(connectionString)}");
+        _databaseType = databaseType;
     }
 
     protected virtual async Task<DbConnection> GetOpenConnectionAsync(CancellationToken cancellationToken = default)
