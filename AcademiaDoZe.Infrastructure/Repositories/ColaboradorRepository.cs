@@ -6,7 +6,6 @@ using AcademiaDoZe.Infrastructure.Data;
 using AcademiaDoZe.Infrastructure.Exceptions;
 using System.Data;
 using System.Data.Common;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace AcademiaDoZe.Infrastructure.Repositories;
 
