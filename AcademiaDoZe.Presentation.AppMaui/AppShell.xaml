@@ -1,26 +1,44 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-     x:Class="AcademiaDoZe.Presentation.AppMaui.AppShell"
-     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-     xmlns:local="clr-namespace:AcademiaDoZe.Presentation.AppMaui"
-     xmlns:views="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Views"
-     Title="Academia do Zé">
-     <!--
-     <ShellContent
-         Title="Home"
-         ContentTemplate="{DataTemplate local:MainPage}"
-         Route="MainPage" />
-     -->
-        <FlyoutItem Title="Dashboard">
-            <ShellContent ContentTemplate="{DataTemplate views:DashboardListPage}" Route="dashboard" />
-        </FlyoutItem>
-        <FlyoutItem Title="Logradouros">
-            <ShellContent ContentTemplate="{DataTemplate views:LogradouroListPage}" Route="logradouros" />
-        </FlyoutItem>
-     <!--
-     <TabBar>
-        <ShellContent Title="Dashboard" ContentTemplate="{DataTemplate views:DashboardListPage}" Route="dashboard" /> <ShellContent Title="Logradouros" ContentTemplate="{DataTemplate views:LogradouroListPage}" Route="logradouros" /> 
-    </TabBar>
-     -->
+    x:Class="AcademiaDoZe.Presentation.AppMaui.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:AcademiaDoZe.Presentation.AppMaui"
+    xmlns:views="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Views"
+    Title="Academia do Zé"
+    FlyoutBackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}">
+
+    <Shell.FlyoutHeader>
+        <Grid BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray950}}"
+              Padding="24,36,24,20"
+              RowDefinitions="Auto,Auto,Auto">
+            <Border WidthRequest="64" HeightRequest="64" 
+                    StrokeShape="RoundRectangle 16"
+                    Stroke="{AppThemeBinding Light={StaticResource CardStrokeLight}, Dark={StaticResource CardStrokeDark}}"
+                    StrokeThickness="1"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource SurfaceDark}}"
+                    HorizontalOptions="Start">
+                <Image Source="academiadoze.png" Aspect="AspectFit" Margin="6"/>
+            </Border>
+            <Label Grid.Row="1" 
+                   Text="Academia do Zé" 
+                   FontFamily="OpenSansSemibold" 
+                   FontAttributes="Bold" 
+                   FontSize="18" 
+                   TextColor="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}"
+                   Margin="0,12,0,0"/>
+            <Label Grid.Row="2" 
+                   Text="Sistema de Gerenciamento" 
+                   FontSize="12" 
+                   TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <FlyoutItem Title="Dashboard">
+        <ShellContent ContentTemplate="{DataTemplate views:DashboardListPage}" Route="dashboard" />
+    </FlyoutItem>
+    <FlyoutItem Title="Logradouros">
+        <ShellContent ContentTemplate="{DataTemplate views:LogradouroListPage}" Route="logradouros" />
+    </FlyoutItem>
+
 </Shell>

@@ -1,63 +1,213 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
- xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
- x:Class="AcademiaDoZe.Presentation.AppMaui.Views.DashboardListPage"
- xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
- x:DataType="vm:DashboardListViewModel"
- Title="{Binding Title}">
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AcademiaDoZe.Presentation.AppMaui.Views.DashboardListPage"
+             xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
+             x:DataType="vm:DashboardListViewModel"
+             Title="{Binding Title}">
     <ScrollView>
-        <Grid RowDefinitions="Auto,*">
-            <!-- Header -->
-            <StackLayout Spacing="10" Margin="0,0,0,20">
-                <Image Source="academiadoze.png" HorizontalOptions="Center" VerticalOptions="Start" HeightRequest="200" WidthRequest="200"/>
-                <Label Text="Academia do Zé" Style="{StaticResource Headline}"/>
-                <Label Text="Sistema de Gerenciamento" Style="{StaticResource SubHeadline}"/>
-            </StackLayout>
-            <!-- Cards Container -->
-            <Grid Grid.Row="1" RowDefinitions="Auto,Auto" ColumnDefinitions="*,*" RowSpacing="15" ColumnSpacing="15">
-                <!-- Card Logradouros -->
-                <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorder}" Margin="15,10">
+        <Grid ColumnDefinitions="*,*" 
+              ColumnSpacing="24" 
+              Padding="24,20" 
+              VerticalOptions="Center">
+            
+            <!-- LADO ESQUERDO: Logo Ampliada e Identidade -->
+            <Border Grid.Column="0"
+                    Style="{StaticResource CardBorder}"
+                    Padding="28,32"
+                    VerticalOptions="Center">
+                <Border.Shadow>
+                    <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                            Offset="0,4" 
+                            Radius="16" 
+                            Opacity="0.06"/>
+                </Border.Shadow>
+                <VerticalStackLayout Spacing="16" HorizontalOptions="Center" VerticalOptions="Center">
+                    <!-- Moldura da Logo Bem Maior -->
+                    <Border StrokeShape="RoundRectangle 24"
+                            Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource CardStrokeDark}}"
+                            StrokeThickness="1"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray900}}"
+                            HeightRequest="240"
+                            WidthRequest="240"
+                            HorizontalOptions="Center"
+                            VerticalOptions="Center"
+                            Padding="16">
+                        <Image Source="academiadoze.png" 
+                               HorizontalOptions="Center" 
+                               VerticalOptions="Center" 
+                               Aspect="AspectFit"/>
+                    </Border>
+                    
+                    <Label Text="Academia do Zé" 
+                           Style="{StaticResource Headline}"
+                           FontSize="28"/>
+                    <Label Text="Sistema de Gerenciamento" 
+                           Style="{StaticResource SubHeadline}"
+                           FontSize="15"/>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- LADO DIREITO: As 4 opções em Quadrados 1x1 (Grid 2x2) -->
+            <Grid Grid.Column="1" 
+                  RowDefinitions="Auto,Auto" 
+                  ColumnDefinitions="*,*" 
+                  RowSpacing="16" 
+                  ColumnSpacing="16"
+                  VerticalOptions="Center">
+                
+                <!-- Card 1: Logradouros (1x1) -->
+                <Border Grid.Row="0" Grid.Column="0" 
+                        Style="{StaticResource CardBorder}" 
+                        HeightRequest="170"
+                        Padding="16">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToLogradourosCommand}"/>
                     </Border.GestureRecognizers>
-                    <StackLayout Spacing="10">
-                        <Label Text="{Binding TotalLogradouros}" Style="{StaticResource SubHeadline}"/>
-                        <Label Text="Logradouros" HorizontalTextAlignment="Center"/>
-                    </StackLayout>
+                    <Border.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                                Offset="0,4" 
+                                Radius="12" 
+                                Opacity="0.05"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="8" 
+                                         HorizontalOptions="Center" 
+                                         VerticalOptions="Center">
+                        <BoxView HeightRequest="4" WidthRequest="36" 
+                                 Color="{StaticResource Primary}" 
+                                 CornerRadius="2" 
+                                 HorizontalOptions="Center" 
+                                 Margin="0,0,0,6"/>
+                        <Label Text="{Binding TotalLogradouros}" 
+                               FontSize="36" 
+                               FontAttributes="Bold" 
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="Logradouros" 
+                               FontSize="14" 
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
                 </Border>
-                <!-- Card Alunos -->
-                <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardBorder}" Margin="15,10">
+
+                <!-- Card 2: Alunos (1x1) -->
+                <Border Grid.Row="0" Grid.Column="1" 
+                        Style="{StaticResource CardBorder}" 
+                        HeightRequest="170"
+                        Padding="16">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToAlunosCommand}"/>
                     </Border.GestureRecognizers>
-                    <StackLayout Spacing="10">
-                        <Label Text="{Binding TotalAlunos}" Style="{StaticResource SubHeadline}"/>
-                        <Label Text="Alunos" HorizontalTextAlignment="Center"/>
-                    </StackLayout>
+                    <Border.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                                Offset="0,4" 
+                                Radius="12" 
+                                Opacity="0.05"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="8" 
+                                         HorizontalOptions="Center" 
+                                         VerticalOptions="Center">
+                        <BoxView HeightRequest="4" WidthRequest="36" 
+                                 Color="{StaticResource Primary}" 
+                                 CornerRadius="2" 
+                                 HorizontalOptions="Center" 
+                                 Margin="0,0,0,6"/>
+                        <Label Text="{Binding TotalAlunos}" 
+                               FontSize="36" 
+                               FontAttributes="Bold" 
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="Alunos" 
+                               FontSize="14" 
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
                 </Border>
-                <!-- Card Colaboradores -->
-                <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardBorder}" Margin="15,10">
+
+                <!-- Card 3: Colaboradores (1x1) -->
+                <Border Grid.Row="1" Grid.Column="0" 
+                        Style="{StaticResource CardBorder}" 
+                        HeightRequest="170"
+                        Padding="16">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToColaboradoresCommand}"/>
                     </Border.GestureRecognizers>
-                    <StackLayout Spacing="10">
-                        <Label Text="{Binding TotalColaboradores}" Style="{StaticResource SubHeadline}"/>
-                        <Label Text="Colaboradores" HorizontalTextAlignment="Center"/>
-                    </StackLayout>
+                    <Border.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                                Offset="0,4" 
+                                Radius="12" 
+                                Opacity="0.05"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="8" 
+                                         HorizontalOptions="Center" 
+                                         VerticalOptions="Center">
+                        <BoxView HeightRequest="4" WidthRequest="36" 
+                                 Color="{StaticResource Primary}" 
+                                 CornerRadius="2" 
+                                 HorizontalOptions="Center" 
+                                 Margin="0,0,0,6"/>
+                        <Label Text="{Binding TotalColaboradores}" 
+                               FontSize="36" 
+                               FontAttributes="Bold" 
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="Colaboradores" 
+                               FontSize="14" 
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
                 </Border>
-                <!-- Card Matrículas -->
-                <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardBorder}" Margin="15,10">
+
+                <!-- Card 4: Matrículas (1x1) -->
+                <Border Grid.Row="1" Grid.Column="1" 
+                        Style="{StaticResource CardBorder}" 
+                        HeightRequest="170"
+                        Padding="16">
                     <Border.GestureRecognizers>
                         <TapGestureRecognizer Command="{Binding NavigateToMatriculasCommand}"/>
                     </Border.GestureRecognizers>
-                    <StackLayout Spacing="10">
-                        <Label Text="{Binding TotalMatriculas}" Style="{StaticResource SubHeadline}"/>
-                        <Label Text="Matrículas" HorizontalTextAlignment="Center"/>
-                    </StackLayout>
+                    <Border.Shadow>
+                        <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
+                                Offset="0,4" 
+                                Radius="12" 
+                                Opacity="0.05"/>
+                    </Border.Shadow>
+                    <VerticalStackLayout Spacing="8" 
+                                         HorizontalOptions="Center" 
+                                         VerticalOptions="Center">
+                        <BoxView HeightRequest="4" WidthRequest="36" 
+                                 Color="{StaticResource Primary}" 
+                                 CornerRadius="2" 
+                                 HorizontalOptions="Center" 
+                                 Margin="0,0,0,6"/>
+                        <Label Text="{Binding TotalMatriculas}" 
+                               FontSize="36" 
+                               FontAttributes="Bold" 
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}"
+                               HorizontalTextAlignment="Center"/>
+                        <Label Text="Matrículas" 
+                               FontSize="14" 
+                               FontFamily="OpenSansSemibold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"
+                               HorizontalTextAlignment="Center"/>
+                    </VerticalStackLayout>
                 </Border>
+
             </Grid>
+
             <!-- Loading Indicator -->
-            <ActivityIndicator Grid.Row="0" Grid.RowSpan="2" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center" />
+            <ActivityIndicator Grid.Column="0" Grid.ColumnSpan="2" 
+                               IsVisible="{Binding IsBusy}" 
+                               IsRunning="{Binding IsBusy}" 
+                               VerticalOptions="Center" 
+                               HorizontalOptions="Center" />
         </Grid>
     </ScrollView>
 </ContentPage>
