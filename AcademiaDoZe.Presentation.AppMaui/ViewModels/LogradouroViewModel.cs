@@ -1,12 +1,37 @@
-﻿using AcademiaDoZe.Application.DTOs;
+using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Interfaces;
 using CommunityToolkit.Mvvm.Input;
 
 namespace AcademiaDoZe.Presentation.AppMaui.ViewModels;
 
-public partial class LogradouroViewModel : BaseViewModel
+[QueryProperty(nameof(IdParam), "Id")]
+public partial class LogradouroViewModel : BaseViewModel, IQueryAttributable
 {
     private readonly ILogradouroService _logradouroService;
+
+    public string IdParam
+    {
+        set
+        {
+            if (int.TryParse(value, out int id) && id > 0)
+            {
+                LogradouroId = id;
+            }
+        }
+    }
+
+    public void ApplyQueryAttributes(IDictionary<string, object> query)
+    {
+        if (query.TryGetValue("Id", out var idObj) && idObj != null)
+        {
+            if (int.TryParse(idObj.ToString(), out int id) && id > 0)
+            {
+                LogradouroId = id;
+                return;
+            }
+        }
+    }
+
     private LogradouroDto _logradouro = new()
     {
         Cep = string.Empty,
@@ -162,6 +187,10 @@ public partial class LogradouroViewModel : BaseViewModel
             Logradouro.Pais = string.IsNullOrWhiteSpace(Logradouro.Pais) ? "Brasil" : Logradouro.Pais.Trim();
             if (IsEditMode)
             {
+                if (Logradouro.Id <= 0 && LogradouroId > 0)
+                {
+                    Logradouro.Id = LogradouroId;
+                }
                 await _logradouroService.AtualizarAsync(Logradouro, cts.Token);
                 await Shell.Current.DisplayAlertAsync("Sucesso", "Logradouro atualizado com sucesso!", "OK");
             }
