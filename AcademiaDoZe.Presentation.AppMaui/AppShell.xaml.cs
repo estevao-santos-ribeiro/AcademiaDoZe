@@ -1,4 +1,4 @@
-﻿using AcademiaDoZe.Presentation.AppMaui.Views;
+using AcademiaDoZe.Presentation.AppMaui.Views;
 
 namespace AcademiaDoZe.Presentation.AppMaui
 {
@@ -13,6 +13,8 @@ namespace AcademiaDoZe.Presentation.AppMaui
         private static void RegisterRoutes()
         {
             Routing.RegisterRoute("logradouro", typeof(LogradouroPage));
+            Routing.RegisterRoute("colaborador", typeof(ColaboradorPage));
+            Routing.RegisterRoute("aluno", typeof(AlunoPage));
         }
     }
 }
