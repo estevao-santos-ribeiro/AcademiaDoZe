@@ -1,4 +1,4 @@
-﻿using AcademiaDoZe.Domain.Entities;
+using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.Enums;
 using AcademiaDoZe.Domain.Repositories;
 using AcademiaDoZe.Domain.ValueObjects;
@@ -185,19 +185,28 @@ public class ColaboradorRepository : BaseRepository, IColaboradorRepository
             throw new InfrastructureException("ERRO_REMOVER_COLABORADOR", $"Erro ao remover colaborador ID {id}: {ex.Message}", ex);
         }
     }
-    public async Task<Colaborador?> ObterPorCpf(Cpf cpf, CancellationToken cancellationToken = default)
+
+    // nova versão, que busca por prefixo do CPF, retornando múltiplos resultados via LIKE
+    public async Task<IEnumerable<Colaborador>> ObterPorCpf(string cpf, CancellationToken cancellationToken = default)
     {
         try
         {
-            string query = $"{BaseSelectQuery} WHERE c.cpf = @Cpf";
+            var apenasDigitos = new string([.. (cpf ?? string.Empty).Where(char.IsDigit)]);
+            string query = $"{BaseSelectQuery} WHERE c.cpf LIKE @Cpf";
             await using var command = await CreateCommandAsync(query, cancellationToken);
-            command.AddParameter("@Cpf", cpf.Valor, DbType.String);
+            command.AddParameter("@Cpf", $"{apenasDigitos}%", DbType.String);
             await using var reader = await command.ExecuteReaderAsync(cancellationToken);
-            return await reader.ReadAsync(cancellationToken) ? Map(reader) : null;
+            var colaboradores = new List<Colaborador>();
+            while (await reader.ReadAsync(cancellationToken))
+            {
+                colaboradores.Add(Map(reader));
+            }
+
+            return colaboradores;
         }
         catch (DbException ex)
         {
-            throw new InfrastructureException("ERRO_OBTER_POR_CPF", $"Erro ao obter colaborador por CPF {cpf.Valor}: {ex.Message}", ex);
+            throw new InfrastructureException("ERRO_OBTER_POR_CPF", $"Erro ao obter colaborador por CPF {cpf}: {ex.Message}", ex);
         }
     }
 
@@ -216,6 +225,7 @@ public class ColaboradorRepository : BaseRepository, IColaboradorRepository
             throw new InfrastructureException("ERRO_OBTER_POR_EMAIL", $"Erro ao obter colaborador por Email {email.Valor}: {ex.Message}", ex);
         }
     }
+
     public async Task<bool> CpfJaExiste(Cpf cpf, int? id = null, CancellationToken cancellationToken = default)
     {
         try
@@ -249,6 +259,7 @@ public class ColaboradorRepository : BaseRepository, IColaboradorRepository
             throw new InfrastructureException("ERRO_VERIFICAR_EMAIL", $"Erro ao verificar existência de Email: {ex.Message}", ex);
         }
     }
+
     public async Task<IEnumerable<Colaborador>> ObterPorTipo(ColaboradorTipo tipo, CancellationToken cancellationToken = default)
     {
         try
@@ -290,6 +301,7 @@ public class ColaboradorRepository : BaseRepository, IColaboradorRepository
             throw new InfrastructureException("ERRO_OBTER_POR_VINCULO", $"Erro ao obter colaboradores por vínculo {vinculo}: {ex.Message}", ex);
         }
     }
+
     public async Task<bool> TrocarSenha(int id, Senha novaSenha, CancellationToken cancellationToken = default)
     {
         try

@@ -1,4 +1,4 @@
-﻿using AcademiaDoZe.Application.DTOs;
+using AcademiaDoZe.Application.DTOs;
 using AcademiaDoZe.Application.Enums;
 
 namespace AcademiaDoZe.Application.Interfaces;
@@ -14,7 +14,7 @@ public interface IColaboradorService
 
     Task<bool> RemoverAsync(int id, CancellationToken cancellationToken = default);
 
-    Task<ColaboradorDto?> ObterPorCpfAsync(string cpf, CancellationToken cancellationToken = default);
+    Task<IEnumerable<ColaboradorDto>> ObterPorCpfAsync(string cpf, CancellationToken cancellationToken = default);
 
     Task<ColaboradorDto?> ObterPorEmailAsync(string email, CancellationToken cancellationToken = default);
 

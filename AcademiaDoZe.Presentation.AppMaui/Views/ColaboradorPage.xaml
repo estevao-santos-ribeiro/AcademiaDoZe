@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="AcademiaDoZe.Presentation.AppMaui.Views.ColaboradorPage"
+             xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
+             xmlns:converters="clr-namespace:AcademiaDoZe.Presentation.AppMaui.Converters"
+             x:DataType="vm:ColaboradorViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <converters:FotoToImageSourceConverter x:Key="FotoToImageSourceConverter" />
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="16,10,16,20">
+
+            <!-- Card: Dados do Colaborador -->
+            <Border Style="{StaticResource CardBorder}" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                        <Label Grid.Column="0" Text="Dados Pessoais" Style="{StaticResource SubHeadline}" />
+                        <Label Grid.Column="1" Text="{Binding Colaborador.Id, StringFormat='ID: {0}'}" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" IsVisible="{Binding IsEditMode}"/>
+                    </Grid>
+
+                    <!-- CPF com Busca -->
+                    <StackLayout Spacing="5">
+                        <Label Text="CPF"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Entry Grid.Column="0"
+                                   Text="{Binding Colaborador.Cpf}"
+                                   Placeholder="000.000.000-00"
+                                   Keyboard="Numeric"
+                                   MaxLength="14"
+                                   Margin="0,0,10,0"
+                                   ClearButtonVisibility="WhileEditing"
+                                   ReturnCommand="{Binding SearchByCpfCommand}" />
+                            <Button Grid.Column="1"
+                                    Text="Buscar CPF"
+                                    Command="{Binding SearchByCpfCommand}"
+                                    Style="{StaticResource ButtonPrimary}"
+                                    HeightRequest="40"
+                                    Padding="15,0">
+                                <Button.ImageSource>
+                                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" />
+                                </Button.ImageSource>
+                            </Button>
+                        </Grid>
+                    </StackLayout>
+
+                    <!-- Nome -->
+                    <StackLayout Spacing="5">
+                        <Label Text="Nome Completo"/>
+                        <Entry Text="{Binding Colaborador.Nome}" Placeholder="Digite o nome..." MaxLength="100"/>
+                    </StackLayout>
+
+                    <!-- Telefone -->
+                    <StackLayout Spacing="5">
+                        <Label Text="Telefone"/>
+                        <Entry Text="{Binding Colaborador.Telefone}" Placeholder="(00) 00000-0000" Keyboard="Telephone" MaxLength="15"/>
+                    </StackLayout>
+
+                    <!-- Email com Validação no Unfocused (Slide 31) -->
+                    <StackLayout Spacing="5">
+                        <Label Text="Email"/>
+                        <Entry x:Name="EmailEntry"
+                               Unfocused="OnEmailUnfocused"
+                               Text="{Binding Colaborador.Email}"
+                               Placeholder="exemplo@email.com"
+                               Keyboard="Email"
+                               MaxLength="100"
+                               ClearButtonVisibility="WhileEditing"/>
+                        <Label x:Name="EmailErrorLabel" TextColor="Red" FontSize="12" IsVisible="False"/>
+                    </StackLayout>
+
+                    <!-- Senha com Switch Mostrar/Ocultar (Slide 26) -->
+                    <StackLayout Spacing="5">
+                        <Label Text="Senha"/>
+                        <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
+                            <Entry x:Name="SenhaEntry" Grid.Column="0" Text="{Binding Colaborador.Senha}" Placeholder="Digite a senha..." IsPassword="True" MaxLength="50" />
+                            <StackLayout Grid.Column="1" Orientation="Horizontal" VerticalOptions="Center" Spacing="6" Padding="6,0,0,0">
+                                <Switch x:Name="ShowPasswordSwitch" Toggled="OnShowPasswordToggled" VerticalOptions="Center"/>
+                                <Label Text="Mostrar" VerticalOptions="Center"/>
+                            </StackLayout>
+                        </Grid>
+                        <Label Text="* Deixe em branco para manter a senha atual cadastrada." FontSize="11" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" IsVisible="{Binding IsEditMode}" Margin="2,-2,0,0"/>
+                    </StackLayout>
+
+                    <!-- Tipo e Vínculo -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Tipo de Colaborador" FontSize="13"/>
+                            <Picker ItemsSource="{Binding Tipos}" SelectedItem="{Binding Colaborador.Tipo}" HeightRequest="44"/>
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Vínculo Empregatício" FontSize="13"/>
+                            <Picker ItemsSource="{Binding Vinculos}" SelectedItem="{Binding Colaborador.Vinculo}" HeightRequest="44"/>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Foto com TapGestureRecognizer (Slide 28) -->
+                    <StackLayout Spacing="8" Margin="0,8,0,0">
+                        <Label Text="Foto de Perfil" FontAttributes="Bold"/>
+                        <HorizontalStackLayout Spacing="16" VerticalOptions="Center">
+                            <Border HeightRequest="120" WidthRequest="120"
+                                    StrokeShape="RoundRectangle 60"
+                                    Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                                    StrokeThickness="2"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}">
+                                <Image Source="{Binding Colaborador.Foto, Converter={StaticResource FotoToImageSourceConverter}}"
+                                       Aspect="AspectFill"
+                                       HeightRequest="120"
+                                       WidthRequest="120">
+                                    <Image.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding SelecionarFotoCommand}" NumberOfTapsRequired="1" />
+                                    </Image.GestureRecognizers>
+                                </Image>
+                            </Border>
+
+                            <VerticalStackLayout Spacing="8" VerticalOptions="Center">
+                                <Label Text="Toque na imagem ou no botão para alterar a foto." FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" LineBreakMode="WordWrap" MaxLines="2" WidthRequest="180"/>
+                                <Button Text="Selecionar Foto" Command="{Binding SelecionarFotoCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="40">
+                                    <Button.ImageSource>
+                                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe226;" />
+                                    </Button.ImageSource>
+                                </Button>
+                            </VerticalStackLayout>
+                        </HorizontalStackLayout>
+                    </StackLayout>
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Card: Endereço -->
+            <Border Style="{StaticResource CardBorder}" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="Endereço" Style="{StaticResource SubHeadline}" />
+                    
+                    <StackLayout Spacing="5">
+                        <Label Text="CEP"/>
+                        <Grid ColumnDefinitions="*,Auto">
+                            <Entry Grid.Column="0" Text="{Binding Colaborador.Endereco.Cep}" Placeholder="00000-000" Keyboard="Numeric" MaxLength="9" Margin="0,0,10,0" ReturnCommand="{Binding SearchByCepCommand}"/>
+                            <Button Grid.Column="1" Text="Buscar CEP" Command="{Binding SearchByCepCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="40"/>
+                        </Grid>
+                    </StackLayout>
+
+                    <Grid ColumnDefinitions="2*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Logradouro" FontSize="13"/>
+                            <Entry Text="{Binding Colaborador.Endereco.Nome}" Placeholder="Rua, Av..." />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Número" FontSize="13"/>
+                            <Entry Text="{Binding Colaborador.Numero}" Placeholder="123" />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Bairro" FontSize="13"/>
+                            <Entry Text="{Binding Colaborador.Endereco.Bairro}" Placeholder="Bairro" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Complemento" FontSize="13"/>
+                            <Entry Text="{Binding Colaborador.Complemento}" Placeholder="Apto, Sala..." />
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <Grid ColumnDefinitions="2*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Grid.Column="0" Spacing="4">
+                            <Label Text="Cidade" FontSize="13"/>
+                            <Entry Text="{Binding Colaborador.Endereco.Cidade}" Placeholder="Cidade" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="UF" FontSize="13"/>
+                            <Entry Text="{Binding Colaborador.Endereco.Estado}" Placeholder="SC" MaxLength="2" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Ações -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,10">
+                <Button Grid.Column="0" Text="Cancelar" Command="{Binding CancelCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="48" />
+                <Button Grid.Column="1" Text="Salvar" Command="{Binding SaveColaboradorCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="48" />
+            </Grid>
+
+            <ActivityIndicator IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
+

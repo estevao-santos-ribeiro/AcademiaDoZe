@@ -1,4 +1,4 @@
-﻿using AcademiaDoZe.Domain.Entities;
+using AcademiaDoZe.Domain.Entities;
 using AcademiaDoZe.Domain.Enums;
 using AcademiaDoZe.Domain.ValueObjects;
 using AcademiaDoZe.Infrastructure.Exceptions;
@@ -157,12 +157,14 @@ public class ColaboradorInfrastructureTests : TestBase
     public async Task Colaborador_ObterPorCpf_SucessoENulo()
     {
         var colaborador = await CriarEInserirColaboradorAsync(_colaboradorRepo, _logradouroRepo);
-        var obtido = await _colaboradorRepo.ObterPorCpf(colaborador.Cpf);
-        Assert.NotNull(obtido);
-        Assert.Equal(colaborador.Id, obtido.Id);
-        var cpfInexistente = Cpf.Criar(GerarCpf()).Value!;
-        var naoObtido = await _colaboradorRepo.ObterPorCpf(cpfInexistente);
-        Assert.Null(naoObtido);
+        var obtidos = await _colaboradorRepo.ObterPorCpf(colaborador.Cpf.Valor);
+        Assert.NotNull(obtidos);
+        Assert.NotEmpty(obtidos);
+        Assert.Contains(obtidos, c => c.Id == colaborador.Id);
+        var cpfInexistente = GerarCpf();
+        var naoObtidos = await _colaboradorRepo.ObterPorCpf(cpfInexistente);
+        Assert.NotNull(naoObtidos);
+        Assert.Empty(naoObtidos);
     }
     [Fact]
     public async Task Colaborador_ObterPorEmail_SucessoENulo()
@@ -230,6 +232,4 @@ public class ColaboradorInfrastructureTests : TestBase
         var alterouInexistente = await _colaboradorRepo.TrocarSenha(999999, novaSenha);
         Assert.False(alterouInexistente);
     }
-
-
 }
