@@ -21,7 +21,7 @@ public partial class ColaboradorListPage : ContentPage
         }
     }
 
-    // Debounce de 300ms na digitação para disparar busca automática
+    // Debounce de 300ms na digitação para disparar busca automática (Slide 18)
     private async void OnSearchDebounceTextChanged(object? sender, TextChangedEventArgs e)
     {
         try
@@ -42,4 +42,3 @@ public partial class ColaboradorListPage : ContentPage
         catch (TaskCanceledException) { /* ignorar */ }
     }
 }
-

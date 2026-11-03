@@ -10,9 +10,11 @@ public partial class AppShell : Shell
         RegisterRoutes();
     }
 
-    private static void RegisterRoutes()
-    {
-        Routing.RegisterRoute("logradouro", typeof(LogradouroPage));
-        Routing.RegisterRoute("colaborador", typeof(ColaboradorPage));
+        private static void RegisterRoutes()
+        {
+            Routing.RegisterRoute("logradouro", typeof(LogradouroPage));
+            Routing.RegisterRoute("colaborador", typeof(ColaboradorPage));
+            Routing.RegisterRoute("aluno", typeof(AlunoPage));
+        }
     }
 }

@@ -75,3 +75,11 @@ CREATE TABLE IF NOT EXISTS tb_acesso (
 
 CREATE INDEX IF NOT EXISTS ix_tb_acesso_pessoa ON tb_acesso(pessoa_tipo, pessoa_id);
 CREATE INDEX IF NOT EXISTS ix_tb_acesso_data_hora ON tb_acesso(data_hora);
+
+-- Dados iniciais de logradouros
+INSERT OR IGNORE INTO tb_logradouro (cep, nome, bairro, cidade, estado, pais) VALUES
+('88501000', 'Avenida Marechal Floriano', 'Centro', 'Lages', 'SC', 'Brasil'),
+('88502000', 'Rua Coronel Córdova', 'Centro', 'Lages', 'SC', 'Brasil'),
+('88503000', 'Avenida Camões', 'Coral', 'Lages', 'SC', 'Brasil'),
+('88504000', 'Avenida Dom Pedro II', 'Universitário', 'Lages', 'SC', 'Brasil'),
+('88505000', 'Rua Benjamin Constant', 'São Cristóvão', 'Lages', 'SC', 'Brasil');

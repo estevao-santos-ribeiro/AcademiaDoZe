@@ -69,7 +69,7 @@
         <!-- Search Bar com Debounce -->
         <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="15,10">
             <Grid ColumnDefinitions="Auto,10,*,10,Auto" VerticalOptions="Center">
-                <Picker Grid.Column="0" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="100" HeightRequest="40" VerticalOptions="Center"/>
+                <Picker Grid.Column="0" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="110" HeightRequest="40" VerticalOptions="Center"/>
                 <Entry x:Name="SearchEntry"
                        Grid.Column="2"
                        Text="{Binding SearchText}"
@@ -123,4 +123,3 @@
         <ActivityIndicator Grid.Row="0" Grid.RowSpan="2" IsVisible="{Binding IsBusy}" IsRunning="{Binding IsBusy}" VerticalOptions="Center" HorizontalOptions="Center"/>
     </Grid>
 </ContentPage>
-

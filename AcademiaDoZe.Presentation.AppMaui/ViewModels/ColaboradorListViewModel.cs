@@ -1,4 +1,5 @@
 using AcademiaDoZe.Application.DTOs;
+using AcademiaDoZe.Application.Enums;
 using AcademiaDoZe.Application.Interfaces;
 using CommunityToolkit.Mvvm.Input;
 using System.Collections.ObjectModel;
@@ -9,7 +10,7 @@ public partial class ColaboradorListViewModel : BaseViewModel
 {
     private readonly IColaboradorService _colaboradorService;
 
-    public ObservableCollection<string> FilterTypes { get; } = ["Nome", "CPF"];
+    public ObservableCollection<string> FilterTypes { get; } = ["Nome", "CPF", "Id", "Email", "Tipo", "Vínculo"];
 
     private string _searchText = string.Empty;
     public string SearchText
@@ -73,6 +74,10 @@ public partial class ColaboradorListViewModel : BaseViewModel
                 });
             }
         }
+        catch (OperationCanceledException)
+        {
+            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "O carregamento dos colaboradores expirou. Verifique a conexão.", "OK");
+        }
         catch (Exception ex)
         {
             await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao carregar colaboradores: {ex.Message}", "OK");
@@ -117,7 +122,49 @@ public partial class ColaboradorListViewModel : BaseViewModel
                     resultados = await _colaboradorService.ObterPorCpfAsync(cpfLimpo, cts.Token) ?? [];
                 }
             }
-            else
+            else if (SelectedFilterType == "Id")
+            {
+                if (int.TryParse(SearchText.Trim(), out var id))
+                {
+                    var colab = await _colaboradorService.ObterPorIdAsync(id, cts.Token);
+                    if (colab != null) resultados = [colab];
+                }
+                else
+                {
+                    await Shell.Current.DisplayAlertAsync("Validação", "Informe um ID numérico válido para pesquisar.", "OK");
+                    return;
+                }
+            }
+            else if (SelectedFilterType == "Email")
+            {
+                var colab = await _colaboradorService.ObterPorEmailAsync(SearchText.Trim(), cts.Token);
+                if (colab != null) resultados = [colab];
+            }
+            else if (SelectedFilterType == "Tipo")
+            {
+                if (Enum.TryParse<AppColaboradorTipo>(SearchText.Trim(), true, out var tipoEnum))
+                {
+                    resultados = await _colaboradorService.ObterPorTipoAsync(tipoEnum, cts.Token) ?? [];
+                }
+                else
+                {
+                    var todos = await _colaboradorService.ObterTodosAsync(cts.Token) ?? [];
+                    resultados = todos.Where(c => c.Tipo.ToString().Contains(SearchText.Trim(), StringComparison.OrdinalIgnoreCase));
+                }
+            }
+            else if (SelectedFilterType == "Vínculo")
+            {
+                if (Enum.TryParse<AppColaboradorVinculo>(SearchText.Trim(), true, out var vinculoEnum))
+                {
+                    resultados = await _colaboradorService.ObterPorVinculoAsync(vinculoEnum, cts.Token) ?? [];
+                }
+                else
+                {
+                    var todos = await _colaboradorService.ObterTodosAsync(cts.Token) ?? [];
+                    resultados = todos.Where(c => c.Vinculo.ToString().Contains(SearchText.Trim(), StringComparison.OrdinalIgnoreCase));
+                }
+            }
+            else // Nome
             {
                 var todos = await _colaboradorService.ObterTodosAsync(cts.Token) ?? [];
                 resultados = todos.Where(c => c.Nome.Contains(SearchText, StringComparison.OrdinalIgnoreCase));
@@ -131,6 +178,10 @@ public partial class ColaboradorListViewModel : BaseViewModel
                 }
                 OnPropertyChanged(nameof(Colaboradores));
             });
+        }
+        catch (OperationCanceledException)
+        {
+            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A busca de colaboradores expirou. Verifique a conexão com o banco.", "OK");
         }
         catch (Exception ex)
         {
@@ -197,9 +248,23 @@ public partial class ColaboradorListViewModel : BaseViewModel
                 await Shell.Current.DisplayAlertAsync("Erro", "Não foi possível excluir o colaborador.", "OK");
             }
         }
+        catch (OperationCanceledException)
+        {
+            await Shell.Current.DisplayAlertAsync("Tempo Esgotado", "A exclusão do colaborador expirou. Verifique a conexão.", "OK");
+        }
         catch (Exception ex)
         {
-            await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao excluir colaborador: {ex.Message}", "OK");
+            if (ex.Message.Contains("FOREIGN KEY", StringComparison.OrdinalIgnoreCase) ||
+                ex.Message.Contains("constraint", StringComparison.OrdinalIgnoreCase) ||
+                ex.Message.Contains("REFERENCE", StringComparison.OrdinalIgnoreCase))
+            {
+                await Shell.Current.DisplayAlertAsync("Não Permitido",
+                    "Este colaborador não pode ser excluído pois possui registros vinculados no sistema (ex: acessos, turmas ou matrículas).", "OK");
+            }
+            else
+            {
+                await Shell.Current.DisplayAlertAsync("Erro", $"Erro ao excluir colaborador: {ex.Message}", "OK");
+            }
         }
         finally
         {
@@ -214,4 +279,3 @@ public partial class ColaboradorListViewModel : BaseViewModel
         await LoadColaboradoresAsync();
     }
 }
-

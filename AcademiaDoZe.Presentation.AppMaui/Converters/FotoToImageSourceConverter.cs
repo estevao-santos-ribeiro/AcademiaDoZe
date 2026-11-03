@@ -25,4 +25,3 @@ public class FotoToImageSourceConverter : IValueConverter
         throw new NotSupportedException();
     }
 }
-

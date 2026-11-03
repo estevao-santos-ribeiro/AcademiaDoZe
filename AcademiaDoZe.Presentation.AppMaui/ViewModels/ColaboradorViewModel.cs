@@ -277,4 +277,3 @@ public partial class ColaboradorViewModel : BaseViewModel
         await Shell.Current.GoToAsync("..");
     }
 }
-

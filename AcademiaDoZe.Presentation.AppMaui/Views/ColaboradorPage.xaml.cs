@@ -29,4 +29,3 @@ public partial class ColaboradorPage : ContentPage
         }
     }
 }
-
