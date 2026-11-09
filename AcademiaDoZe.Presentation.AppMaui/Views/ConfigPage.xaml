@@ -6,7 +6,6 @@
     <ScrollView>
         <VerticalStackLayout Spacing="20" Padding="16">
             
-            <!-- Card 1: Tema -->
             <Border Style="{StaticResource CardBorder}" Padding="16">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="Tema" Style="{StaticResource SubHeadline}" />
@@ -31,7 +30,6 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Card 2: Credenciais do Banco -->
             <Border Style="{StaticResource CardBorder}" Padding="16">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="Credenciais do Banco" Style="{StaticResource SubHeadline}" />

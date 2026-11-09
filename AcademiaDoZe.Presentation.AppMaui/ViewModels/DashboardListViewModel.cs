@@ -1,4 +1,4 @@
-﻿using AcademiaDoZe.Application.Interfaces;
+using AcademiaDoZe.Application.Interfaces;
 using AcademiaDoZe.Application.Services;
 using CommunityToolkit.Mvvm.Input;
 
@@ -72,4 +72,6 @@ public partial class DashboardListViewModel : BaseViewModel
     private async Task NavigateToColaboradoresAsync() => await Shell.Current.GoToAsync("//colaboradores");
     [RelayCommand]
     private async Task NavigateToMatriculasAsync() => await Shell.Current.GoToAsync("//matriculas");
+    [RelayCommand]
+    private async Task NavigateToNovaMatriculaAsync() => await Shell.Current.GoToAsync("matricula");
 }

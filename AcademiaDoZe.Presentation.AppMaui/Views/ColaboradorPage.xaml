@@ -14,7 +14,6 @@
     <ScrollView>
         <VerticalStackLayout Spacing="16" Padding="16,10,16,20">
 
-            <!-- Card: Dados do Colaborador -->
             <Border Style="{StaticResource CardBorder}" Padding="16">
                 <VerticalStackLayout Spacing="12">
                     <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
@@ -22,7 +21,6 @@
                         <Label Grid.Column="1" Text="{Binding Colaborador.Id, StringFormat='ID: {0}'}" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}" IsVisible="{Binding IsEditMode}"/>
                     </Grid>
 
-                    <!-- CPF com Busca -->
                     <StackLayout Spacing="5">
                         <Label Text="CPF"/>
                         <Grid ColumnDefinitions="*,Auto">
@@ -47,19 +45,16 @@
                         </Grid>
                     </StackLayout>
 
-                    <!-- Nome -->
                     <StackLayout Spacing="5">
                         <Label Text="Nome Completo"/>
                         <Entry Text="{Binding Colaborador.Nome}" Placeholder="Digite o nome..." MaxLength="100"/>
                     </StackLayout>
 
-                    <!-- Telefone -->
                     <StackLayout Spacing="5">
                         <Label Text="Telefone"/>
                         <Entry Text="{Binding Colaborador.Telefone}" Placeholder="(00) 00000-0000" Keyboard="Telephone" MaxLength="15"/>
                     </StackLayout>
 
-                    <!-- Email com Validação no Unfocused (Slide 31) -->
                     <StackLayout Spacing="5">
                         <Label Text="Email"/>
                         <Entry x:Name="EmailEntry"
@@ -72,7 +67,6 @@
                         <Label x:Name="EmailErrorLabel" TextColor="Red" FontSize="12" IsVisible="False"/>
                     </StackLayout>
 
-                    <!-- Senha com Switch Mostrar/Ocultar (Slide 26) -->
                     <StackLayout Spacing="5">
                         <Label Text="Senha"/>
                         <Grid ColumnDefinitions="*,Auto" VerticalOptions="Center">
@@ -85,7 +79,6 @@
                         <Label Text="* Deixe em branco para manter a senha atual cadastrada." FontSize="11" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}" IsVisible="{Binding IsEditMode}" Margin="2,-2,0,0"/>
                     </StackLayout>
 
-                    <!-- Tipo e Vínculo -->
                     <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
                         <VerticalStackLayout Grid.Column="0" Spacing="4">
                             <Label Text="Tipo de Colaborador" FontSize="13"/>
@@ -97,7 +90,6 @@
                         </VerticalStackLayout>
                     </Grid>
 
-                    <!-- Foto com TapGestureRecognizer (Slide 28) -->
                     <StackLayout Spacing="8" Margin="0,8,0,0">
                         <Label Text="Foto de Perfil" FontAttributes="Bold"/>
                         <HorizontalStackLayout Spacing="16" VerticalOptions="Center">
@@ -130,7 +122,6 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Card: Endereço -->
             <Border Style="{StaticResource CardBorder}" Padding="16">
                 <VerticalStackLayout Spacing="12">
                     <Label Text="Endereço" Style="{StaticResource SubHeadline}" />
@@ -178,7 +169,6 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Ações -->
             <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,10">
                 <Button Grid.Column="0" Text="Cancelar" Command="{Binding CancelCommand}" Style="{StaticResource ButtonSecondary}" HeightRequest="48" />
                 <Button Grid.Column="1" Text="Salvar" Command="{Binding SaveColaboradorCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="48" />

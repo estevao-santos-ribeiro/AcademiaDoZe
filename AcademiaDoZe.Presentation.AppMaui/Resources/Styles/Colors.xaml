@@ -3,14 +3,12 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
 
-    <!-- Cores da Identidade Visual Moderna - Academia do Zé -->
-    <!-- Rosa Moderno no Modo Claro, Azul Elétrico / Dark Slate no Modo Escuro -->
-    <Color x:Key="Primary">#DB2777</Color>
-    <Color x:Key="PrimaryDark">#3B82F6</Color>
+    <Color x:Key="Primary">#EA580C</Color>
+    <Color x:Key="PrimaryDark">#FB923C</Color>
     <Color x:Key="PrimaryDarkText">#FFFFFF</Color>
-    <Color x:Key="Secondary">#FDF2F8</Color>
+    <Color x:Key="Secondary">#FFF7ED</Color>
     <Color x:Key="SecondaryDarkText">#94A3B8</Color>
-    <Color x:Key="Tertiary">#BE185D</Color>
+    <Color x:Key="Tertiary">#C2410C</Color>
 
     <Color x:Key="White">#FFFFFF</Color>
     <Color x:Key="Black">#000000</Color>
@@ -27,10 +25,9 @@
     <Color x:Key="Gray900">#1E293B</Color>
     <Color x:Key="Gray950">#0F172A</Color>
 
-    <!-- Cores Semânticas Adicionais -->
     <Color x:Key="SurfaceLight">#FFFFFF</Color>
     <Color x:Key="SurfaceDark">#1E293B</Color>
-    <Color x:Key="CardStrokeLight">#FCE7F3</Color>
+    <Color x:Key="CardStrokeLight">#FED7AA</Color>
     <Color x:Key="CardStrokeDark">#334155</Color>
     <Color x:Key="Danger">#DC2626</Color>
     <Color x:Key="DangerDark">#EF4444</Color>

@@ -23,7 +23,6 @@
                 <Grid Padding="1" Margin="5">
                     <Border Style="{StaticResource CardBorder}" Margin="6">
                         <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12" Padding="12" VerticalOptions="Center">
-                            <!-- Foto do Colaborador -->
                             <Border Grid.Column="0"
                                     HeightRequest="70" WidthRequest="70"
                                     StrokeShape="RoundRectangle 35"
@@ -35,7 +34,6 @@
                                        Aspect="AspectFill" HeightRequest="70" WidthRequest="70" />
                             </Border>
 
-                            <!-- Informações do Colaborador -->
                             <VerticalStackLayout Grid.Column="1" Spacing="3" VerticalOptions="Center">
                                 <Label Text="{Binding Nome}" FontAttributes="Bold" FontSize="16" LineBreakMode="TailTruncation"/>
                                 <Label Text="{Binding Cpf, StringFormat='CPF: {0}'}" FontSize="12" TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray400}}"/>
@@ -50,7 +48,6 @@
                                 </HorizontalStackLayout>
                             </VerticalStackLayout>
 
-                            <!-- Botão de Ação -->
                             <Button Grid.Column="2"
                                     Text="Editar"
                                     Style="{StaticResource ButtonSecondary}"
@@ -66,7 +63,6 @@
     </ContentPage.Resources>
 
     <Grid RowDefinitions="Auto,*">
-        <!-- Search Bar com Debounce -->
         <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="15,10">
             <Grid ColumnDefinitions="Auto,10,*,10,Auto" VerticalOptions="Center">
                 <Picker Grid.Column="0" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="110" HeightRequest="40" VerticalOptions="Center"/>
@@ -87,7 +83,6 @@
             </Grid>
         </Border>
 
-        <!-- Lista e FAB -->
         <Grid Grid.Row="1">
             <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
                 <CollectionView ItemsSource="{Binding Colaboradores}"
@@ -103,7 +98,6 @@
                 </CollectionView>
             </RefreshView>
 
-            <!-- FAB -->
             <Button Command="{Binding AddColaboradorCommand}"
                     Style="{StaticResource ButtonPrimary}"
                     WidthRequest="56"

@@ -11,7 +11,6 @@
     <ContentPage.Resources>
         <converters:FotoToImageSourceConverter x:Key="FotoToImageSourceConverter" />
 
-        <!-- Template único com OnIdiom para Phone, Tablet, Desktop, TV, Watch e Default -->
         <DataTemplate x:Key="AlunoItemTemplate" x:DataType="dto:AlunoDto">
             <Grid Padding="1" Margin="5">
                 <Border Style="{StaticResource CardBorder}" Margin="10">
@@ -19,7 +18,6 @@
                         <Image Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" Grid.RowSpan="7" 
                                Source="{Binding Foto, Converter={StaticResource FotoToImageSourceConverter}}" 
                                Aspect="AspectFill" Margin="0,0,10,0">
-                            <!-- HeightRequest conforme OnIdiom - utilizando objeto filho -->
                             <Image.HeightRequest>
                                 <OnIdiom x:TypeArguments="x:Double">
                                     <OnIdiom.Phone>110</OnIdiom.Phone>
@@ -29,7 +27,6 @@
                                     <OnIdiom.Default>110</OnIdiom.Default>
                                 </OnIdiom>
                             </Image.HeightRequest>
-                            <!-- WidthRequest conforme OnIdiom - utilizando objeto filho -->
                             <Image.WidthRequest>
                                 <OnIdiom x:TypeArguments="x:Double">
                                     <OnIdiom.Phone>110</OnIdiom.Phone>
@@ -82,9 +79,7 @@
         </DataTemplate>
     </ContentPage.Resources>
 
-    <!-- Estrutura principal da página -->
     <Grid RowDefinitions="Auto,*">
-        <!-- Search Bar -->
         <Border Grid.Row="0" Style="{StaticResource CardBorder}" Margin="15,10">
             <Grid ColumnDefinitions="Auto,10,*,10,Auto" VerticalOptions="Center">
                 <Picker Grid.Column="0" Title="" ItemsSource="{Binding FilterTypes}" SelectedItem="{Binding SelectedFilterType}" WidthRequest="110" HorizontalOptions="Start" HeightRequest="40" VerticalOptions="Center"/>
@@ -97,14 +92,11 @@
             </Grid>
         </Border>
 
-        <!-- Lista/Grade + FAB -->
         <Grid Grid.Row="1">
             <RefreshView IsRefreshing="{Binding IsRefreshing}" Command="{Binding RefreshCommand}">
-                <!-- Mostra os dados dos alunos -->
                 <CollectionView ItemsSource="{Binding Alunos}" SelectionMode="None" Margin="10">
                     <CollectionView.ItemsLayout>
                         <GridItemsLayout Orientation="Vertical">
-                            <!-- Span conforme OnIdiom - utilizando objeto filho -->
                             <GridItemsLayout.Span>
                                 <OnIdiom x:TypeArguments="x:Int32">
                                     <OnIdiom.Phone>1</OnIdiom.Phone>
@@ -122,14 +114,12 @@
                             <Button Text="Adicionar Primeiro Aluno" Command="{Binding AddAlunoCommand}" Style="{StaticResource ButtonPrimary}" HeightRequest="50" Margin="0,20,0,0"/>
                         </StackLayout>
                     </CollectionView.EmptyView>
-                    <!-- Utiliza o DataTemplate criado acima -->
                     <CollectionView.ItemTemplate>
                         <StaticResource Key="AlunoItemTemplate" />
                     </CollectionView.ItemTemplate>
                 </CollectionView>
             </RefreshView>
 
-            <!-- FAB -->
             <Button Command="{Binding AddAlunoCommand}" 
                     Style="{StaticResource ButtonPrimary}" 
                     WidthRequest="56" 

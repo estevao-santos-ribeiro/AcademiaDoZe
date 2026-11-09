@@ -8,7 +8,6 @@
     <ScrollView>
         <VerticalStackLayout Spacing="16" Padding="18,16,18,32">
             
-            <!-- CEP Section -->
             <Border Style="{StaticResource CardBorder}" Padding="18,16">
                 <Border.Shadow>
                     <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
@@ -46,7 +45,6 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Dados do Logradouro -->
             <Border Style="{StaticResource CardBorder}" Padding="18,20">
                 <Border.Shadow>
                     <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
@@ -56,7 +54,6 @@
                 </Border.Shadow>
                 <VerticalStackLayout Spacing="14">
                     
-                    <!-- ID Badge Header -->
                     <Border HorizontalOptions="Start"
                             StrokeShape="RoundRectangle 6"
                             Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource CardStrokeDark}}"
@@ -70,7 +67,6 @@
                                TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
                     </Border>
 
-                    <!-- Nome / Rua -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Nome/Rua" 
                                FontSize="12" 
@@ -89,7 +85,6 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Bairro -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Bairro" 
                                FontSize="12" 
@@ -108,7 +103,6 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Cidade -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Cidade" 
                                FontSize="12" 
@@ -127,7 +121,6 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- Estado -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="Estado" 
                                FontSize="12" 
@@ -146,7 +139,6 @@
                         </Border>
                     </VerticalStackLayout>
 
-                    <!-- País -->
                     <VerticalStackLayout Spacing="6">
                         <Label Text="País" 
                                FontSize="12" 
@@ -168,7 +160,6 @@
                 </VerticalStackLayout>
             </Border>
 
-            <!-- Botões de Ação -->
             <Grid ColumnDefinitions="*,*" ColumnSpacing="12" Margin="0,4,0,0">
                 <Button Grid.Column="0" 
                         Text="Cancelar" 
@@ -182,7 +173,6 @@
                         HeightRequest="46"/>
             </Grid>
 
-            <!-- Loading Indicator -->
             <ActivityIndicator IsVisible="{Binding IsBusy}" 
                                IsRunning="{Binding IsBusy}" 
                                VerticalOptions="Center" 
