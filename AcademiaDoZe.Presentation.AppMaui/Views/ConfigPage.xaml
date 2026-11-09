@@ -8,25 +8,55 @@
             
             <Border Style="{StaticResource CardBorder}" Padding="16">
                 <VerticalStackLayout Spacing="12">
-                    <Label Text="Tema" Style="{StaticResource SubHeadline}" />
+                    <Label Text="Tema da Aplicação" Style="{StaticResource SubHeadline}" />
+                    <Label Text="Selecione a aparência de sua preferência:" FontSize="13" TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
                     
-                    <Label Text="Tema" FontSize="13" />
-                    <Border StrokeShape="RoundRectangle 8"
-                            Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource CardStrokeDark}}"
-                            StrokeThickness="1"
-                            BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
-                            Padding="8,0"
-                            HeightRequest="44">
-                        <Picker x:Name="TemaPicker" Title="Selecione o Tema" VerticalOptions="Center">
-                            <Picker.ItemsSource>
-                                <x:Array Type="{x:Type x:String}">
-                                    <x:String>light</x:String>
-                                    <x:String>dark</x:String>
-                                    <x:String>system</x:String>
-                                </x:Array>
-                            </Picker.ItemsSource>
-                        </Picker>
-                    </Border>
+                    <Grid ColumnDefinitions="*,*,*" ColumnSpacing="10" Margin="0,4,0,0">
+                        <Border x:Name="BtnTemaClaro"
+                                Grid.Column="0"
+                                StrokeShape="RoundRectangle 10"
+                                HeightRequest="44"
+                                StrokeThickness="1"
+                                Padding="10,0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTemaClaroClicked"/>
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label x:Name="IconTemaClaro" Text="&#xe518;" FontFamily="MaterialIcons" FontSize="18" VerticalOptions="Center"/>
+                                <Label x:Name="LabelTemaClaro" Text="Claro" FontSize="13" FontAttributes="Bold" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Border>
+
+                        <Border x:Name="BtnTemaEscuro"
+                                Grid.Column="1"
+                                StrokeShape="RoundRectangle 10"
+                                HeightRequest="44"
+                                StrokeThickness="1"
+                                Padding="10,0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTemaEscuroClicked"/>
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label x:Name="IconTemaEscuro" Text="&#xe51c;" FontFamily="MaterialIcons" FontSize="18" VerticalOptions="Center"/>
+                                <Label x:Name="LabelTemaEscuro" Text="Escuro" FontSize="13" FontAttributes="Bold" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Border>
+
+                        <Border x:Name="BtnTemaSistema"
+                                Grid.Column="2"
+                                StrokeShape="RoundRectangle 10"
+                                HeightRequest="44"
+                                StrokeThickness="1"
+                                Padding="10,0">
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnTemaSistemaClicked"/>
+                            </Border.GestureRecognizers>
+                            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center" VerticalOptions="Center">
+                                <Label x:Name="IconTemaSistema" Text="&#xe30c;" FontFamily="MaterialIcons" FontSize="18" VerticalOptions="Center"/>
+                                <Label x:Name="LabelTemaSistema" Text="Sistema" FontSize="13" FontAttributes="Bold" VerticalOptions="Center"/>
+                            </HorizontalStackLayout>
+                        </Border>
+                    </Grid>
                 </VerticalStackLayout>
             </Border>
 
@@ -39,8 +69,7 @@
                             Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource CardStrokeDark}}"
                             StrokeThickness="1"
                             BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Gray900}}"
-                            Padding="8,0"
-                            HeightRequest="44">
+                            Padding="8,0">
                         <Picker x:Name="TipoBancoPicker" VerticalOptions="Center">
                             <Picker.ItemsSource>
                                 <x:Array Type="{x:Type x:String}">
@@ -89,4 +118,3 @@
         </VerticalStackLayout>
     </ScrollView>
 </ContentPage>
-

@@ -5,21 +5,59 @@ namespace AcademiaDoZe.Presentation.AppMaui.Views;
 
 public partial class ConfigPage : ContentPage
 {
-    private bool _isCarregando = true;
-
     public ConfigPage()
     {
         InitializeComponent();
         CarregarTema();
         CarregarBanco();
-        TemaPicker.SelectedIndexChanged += OnTemaSelectedIndexChanged;
-        _isCarregando = false;
     }
 
     private void CarregarTema()
     {
         string tema = Preferences.Get("Tema", "system");
-        TemaPicker.SelectedItem = tema;
+        AtualizarBotoesTema(tema);
+    }
+
+    private void OnTemaClaroClicked(object? sender, EventArgs e) => SelecionarTema("light");
+
+    private void OnTemaEscuroClicked(object? sender, EventArgs e) => SelecionarTema("dark");
+
+    private void OnTemaSistemaClicked(object? sender, EventArgs e) => SelecionarTema("system");
+
+    private void SelecionarTema(string tema)
+    {
+        Preferences.Set("Tema", tema);
+        AtualizarBotoesTema(tema);
+        WeakReferenceMessenger.Default.Send(new TemaPreferencesUpdatedMessage("TemaAlterado"));
+    }
+
+    private void AtualizarBotoesTema(string tema)
+    {
+        var corAtiva = Color.FromArgb("#EA580C");
+        var corInativaTexto = Color.FromArgb("#64748B");
+        var corInativaBorda = Color.FromArgb("#CBD5E1");
+
+        ConfigurarBotaoTema(BtnTemaClaro, IconTemaClaro, LabelTemaClaro, tema == "light", corAtiva, corInativaTexto, corInativaBorda);
+        ConfigurarBotaoTema(BtnTemaEscuro, IconTemaEscuro, LabelTemaEscuro, tema == "dark", corAtiva, corInativaTexto, corInativaBorda);
+        ConfigurarBotaoTema(BtnTemaSistema, IconTemaSistema, LabelTemaSistema, tema == "system", corAtiva, corInativaTexto, corInativaBorda);
+    }
+
+    private static void ConfigurarBotaoTema(Border btn, Label icon, Label label, bool isAtivo, Color corAtiva, Color corInativaTexto, Color corInativaBorda)
+    {
+        if (isAtivo)
+        {
+            btn.BackgroundColor = corAtiva;
+            btn.Stroke = corAtiva;
+            icon.TextColor = Colors.White;
+            label.TextColor = Colors.White;
+        }
+        else
+        {
+            btn.BackgroundColor = Colors.Transparent;
+            btn.Stroke = corInativaBorda;
+            icon.TextColor = corInativaTexto;
+            label.TextColor = corInativaTexto;
+        }
     }
 
     private void CarregarBanco()
@@ -30,24 +68,6 @@ public partial class ConfigPage : ContentPage
         UsuarioEntry.Text = Preferences.Get("BancoUsuario", "root");
         SenhaEntry.Text = Preferences.Get("BancoSenha", "abcBolinhas12345");
         ComplementoEntry.Text = Preferences.Get("BancoComplemento", string.Empty);
-    }
-
-    private void OnTemaSelectedIndexChanged(object? sender, EventArgs e)
-    {
-        if (_isCarregando || TemaPicker.SelectedIndex < 0)
-            return;
-
-        string selectedTheme = TemaPicker.SelectedIndex switch
-        {
-            0 => "light",
-            1 => "dark",
-            _ => "system"
-        };
-
-        Preferences.Set("Tema", selectedTheme);
-
-        // Disparar mensagem para uso na recarga dinâmica imediata
-        WeakReferenceMessenger.Default.Send(new TemaPreferencesUpdatedMessage("TemaAlterado"));
     }
 
     private async void OnSalvarBancoClicked(object? sender, EventArgs e)
@@ -67,4 +87,3 @@ public partial class ConfigPage : ContentPage
         await Shell.Current.GoToAsync("..");
     }
 }
-
