@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AcademiaDoZe.Presentation.AppMaui.Views.LogradouroListPage"
+             x:Name="LogradourosPage"
              xmlns:vm="clr-namespace:AcademiaDoZe.Presentation.AppMaui.ViewModels"
              x:DataType="vm:LogradouroListViewModel"
              xmlns:dto="clr-namespace:AcademiaDoZe.Application.DTOs;assembly=AcademiaDoZe.Application"
@@ -11,7 +12,7 @@
         <Border Grid.Row="0" 
                 Style="{StaticResource CardBorder}" 
                 Margin="16,12,16,8"
-                Padding="8">
+                Padding="6">
             <Border.Shadow>
                 <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
                         Offset="0,2" 
@@ -27,7 +28,7 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
                         Padding="8,0"
                         HeightRequest="42"
-                        WidthRequest="120">
+                        WidthRequest="130">
                     <Picker Title="" 
                             ItemsSource="{Binding FilterTypes}" 
                             SelectedItem="{Binding SelectedFilterType}" 
@@ -45,17 +46,22 @@
                     <Entry Text="{Binding SearchText}" 
                            Placeholder="Digite o valor..." 
                            FontSize="13"
+                           ClearButtonVisibility="WhileEditing"
+                           ReturnCommand="{Binding SearchLogradourosCommand}"
                            VerticalOptions="Center"/>
                 </Border>
 
                 <Button Grid.Column="2" 
-                        Text="Buscar" 
+                        Command="{Binding SearchLogradourosCommand}" 
                         Style="{StaticResource ButtonPrimary}" 
-                        FontSize="13" 
-                        WidthRequest="80" 
                         HeightRequest="42" 
+                        WidthRequest="46"
                         Padding="0"
-                        Command="{Binding SearchLogradourosCommand}"/>
+                        CornerRadius="8">
+                    <Button.ImageSource>
+                        <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe8b6;" Size="20" Color="White" />
+                    </Button.ImageSource>
+                </Button>
             </Grid>
         </Border>
 
@@ -65,12 +71,20 @@
                          Padding="16,6,16,16">
                 
                 <CollectionView ItemsSource="{Binding Logradouros}" SelectionMode="None">
-                    
                     <CollectionView.ItemsLayout>
-                        <GridItemsLayout Orientation="Vertical" 
-                                         Span="3" 
-                                         HorizontalItemSpacing="12" 
-                                         VerticalItemSpacing="12" />
+                        <GridItemsLayout Orientation="Vertical"
+                                         HorizontalItemSpacing="14"
+                                         VerticalItemSpacing="14">
+                            <GridItemsLayout.Span>
+                                <OnIdiom x:TypeArguments="x:Int32">
+                                    <OnIdiom.Phone>1</OnIdiom.Phone>
+                                    <OnIdiom.Default>1</OnIdiom.Default>
+                                    <OnIdiom.Tablet>2</OnIdiom.Tablet>
+                                    <OnIdiom.Desktop>3</OnIdiom.Desktop>
+                                    <OnIdiom.TV>4</OnIdiom.TV>
+                                </OnIdiom>
+                            </GridItemsLayout.Span>
+                        </GridItemsLayout>
                     </CollectionView.ItemsLayout>
 
                     <CollectionView.EmptyView>
@@ -92,80 +106,94 @@
                     <CollectionView.ItemTemplate>
                         <DataTemplate x:DataType="dto:LogradouroDto">
                             <Border Style="{StaticResource CardBorder}" 
-                                    Padding="14,14">
+                                    Padding="16"
+                                    StrokeShape="RoundRectangle 16">
                                 <Border.Shadow>
                                     <Shadow Brush="{AppThemeBinding Light=#0F172A, Dark=#000000}" 
                                             Offset="0,3" 
-                                            Radius="8" 
-                                            Opacity="0.04"/>
+                                            Radius="10" 
+                                            Opacity="0.05"/>
                                 </Border.Shadow>
-                                <VerticalStackLayout Spacing="8">
-                                    
-                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="4" VerticalOptions="Center">
+                                <VerticalStackLayout Spacing="10">
+                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="6" VerticalOptions="Center">
                                         <Border Grid.Column="0"
                                                 HorizontalOptions="Start"
                                                 StrokeShape="RoundRectangle 6"
                                                 Stroke="{AppThemeBinding Light={StaticResource CardStrokeLight}, Dark={StaticResource CardStrokeDark}}"
                                                 StrokeThickness="1"
                                                 BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray900}}"
-                                                Padding="6,3">
-                                            <Label Text="{Binding Cep}" 
-                                                   FontFamily="OpenSansSemibold"
-                                                   FontAttributes="Bold" 
-                                                   FontSize="11"
-                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"/>
+                                                Padding="8,2"
+                                                VerticalOptions="Center">
+                                            <Label Text="{Binding Id, StringFormat='ID: {0}'}" 
+                                                   FontSize="11" 
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                                   VerticalTextAlignment="Center"/>
                                         </Border>
 
                                         <Button Grid.Column="1" 
-                                                Text="Editar" 
-                                                Style="{StaticResource ButtonSmall}" 
-                                                FontSize="11"
-                                                WidthRequest="54"
-                                                HeightRequest="28"
+                                                Clicked="OnEditButtonClicked"
+                                                Style="{StaticResource ButtonSmall}"
                                                 Padding="0"
-                                                Clicked="OnEditButtonClicked" />
+                                                HeightRequest="32"
+                                                WidthRequest="32"
+                                                CornerRadius="6">
+                                            <Button.ImageSource>
+                                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe3c9;" Size="16" />
+                                            </Button.ImageSource>
+                                        </Button>
+                                        
                                         <Button Grid.Column="2" 
-                                                Text="Excluir" 
-                                                Style="{StaticResource ButtonDanger}" 
-                                                FontSize="11"
-                                                WidthRequest="54"
-                                                HeightRequest="28"
+                                                Clicked="OnDeleteButtonClicked"
+                                                Style="{StaticResource ButtonDanger}"
                                                 Padding="0"
-                                                Clicked="OnDeleteButtonClicked" />
+                                                HeightRequest="32"
+                                                WidthRequest="32"
+                                                CornerRadius="6">
+                                            <Button.ImageSource>
+                                                <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe872;" Size="16" />
+                                            </Button.ImageSource>
+                                        </Button>
                                     </Grid>
 
                                     <Label Text="{Binding Nome}" 
-                                           FontSize="15" 
-                                           FontFamily="OpenSansSemibold"
+                                           FontSize="16" 
                                            FontAttributes="Bold" 
+                                           FontFamily="OpenSansSemibold"
                                            TextColor="{AppThemeBinding Light={StaticResource MidnightBlue}, Dark={StaticResource White}}"
-                                           LineBreakMode="TailTruncation"
-                                           Margin="0,2,0,0"/>
+                                           LineBreakMode="TailTruncation"/>
 
-                                    <Label Text="{Binding Bairro}" 
-                                           FontSize="12" 
-                                           LineBreakMode="TailTruncation"
-                                           TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
+                                    <HorizontalStackLayout Spacing="6">
+                                        <Border Padding="6,2" 
+                                                StrokeShape="RoundRectangle 4" 
+                                                BackgroundColor="{AppThemeBinding Light=#F5F3FF, Dark=#3B0764}"
+                                                StrokeThickness="0">
+                                            <Label Text="{Binding Bairro}" 
+                                                   FontSize="11" 
+                                                   TextColor="{AppThemeBinding Light=#7C3AED, Dark=#A78BFA}"
+                                                   FontAttributes="Bold"/>
+                                        </Border>
+                                        <Border Padding="6,2" 
+                                                StrokeShape="RoundRectangle 4" 
+                                                BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource Gray800}}"
+                                                StrokeThickness="0">
+                                            <Label Text="{Binding Cidade, StringFormat='{0}'}" 
+                                                   FontSize="11" 
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"/>
+                                        </Border>
+                                    </HorizontalStackLayout>
 
-                                    <Grid ColumnDefinitions="*,Auto">
+                                    <Grid ColumnDefinitions="*,Auto" Margin="0,4,0,0">
                                         <Label Grid.Column="0" 
-                                               FontSize="12"
-                                               LineBreakMode="TailTruncation"
-                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}">
-                                            <Label.FormattedText>
-                                                <FormattedString>
-                                                    <Span Text="{Binding Cidade}"/>
-                                                    <Span Text=" - "/>
-                                                    <Span Text="{Binding Estado}"/>
-                                                </FormattedString>
-                                            </Label.FormattedText>
-                                        </Label>
+                                               Text="{Binding Cep, StringFormat='CEP: {0}'}" 
+                                               FontSize="12" 
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray500}, Dark={StaticResource Gray400}}"/>
                                         <Label Grid.Column="1" 
-                                               Text="{Binding Pais}" 
-                                               FontSize="11" 
-                                               TextColor="{AppThemeBinding Light={StaticResource Gray400}, Dark={StaticResource Gray500}}"/>
+                                               Text="{Binding Estado, StringFormat='UF: {0}'}" 
+                                               FontSize="12" 
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"/>
                                     </Grid>
-
                                 </VerticalStackLayout>
                             </Border>
                         </DataTemplate>
@@ -173,29 +201,28 @@
                 </CollectionView>
             </RefreshView>
 
-            <Button Text="+" 
-                    Command="{Binding AddLogradouroCommand}" 
+            <Button Command="{Binding AddLogradouroCommand}" 
                     Style="{StaticResource ButtonPrimary}" 
                     WidthRequest="56" 
                     HeightRequest="56" 
-                    CornerRadius="28"
-                    FontSize="24"
-                    Padding="0"
+                    CornerRadius="28" 
+                    Padding="0" 
                     HorizontalOptions="End" 
                     VerticalOptions="End" 
                     Margin="20">
                 <Button.Shadow>
-                    <Shadow Brush="{AppThemeBinding Light={StaticResource Primary}, Dark=#000000}" 
-                            Offset="0,4" 
-                            Radius="12" 
-                            Opacity="0.35"/>
+                    <Shadow Brush="{AppThemeBinding Light=Black, Dark=Gray}" Offset="0,4" Radius="8" Opacity="0.3"/>
                 </Button.Shadow>
+                <Button.ImageSource>
+                    <FontImageSource FontFamily="MaterialIcons" Glyph="&#xe145;" Size="24" Color="White" />
+                </Button.ImageSource>
             </Button>
         </Grid>
 
         <ActivityIndicator Grid.Row="0" Grid.RowSpan="2" 
                            IsVisible="{Binding IsBusy}" 
                            IsRunning="{Binding IsBusy}" 
+                           Color="{StaticResource Primary}"
                            VerticalOptions="Center" 
                            HorizontalOptions="Center"/>
     </Grid>
