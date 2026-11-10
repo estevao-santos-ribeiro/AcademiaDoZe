@@ -161,12 +161,12 @@ public class AcessoColaboradorRepository : BaseRepository, IAcessoColaboradorRep
 
             if (inicio.HasValue)
             {
-                cmd.AddParameter("@Inicio", inicio.Value.ToString("yyyy-MM-dd 00:00:00"), DbType.String);
+                cmd.AddParameter("@Inicio", $"{inicio.Value:yyyy-MM-dd} 00:00:00", DbType.String);
             }
 
             if (fim.HasValue)
             {
-                cmd.AddParameter("@Fim", fim.Value.ToString("yyyy-MM-dd 23:59:59"), DbType.String);
+                cmd.AddParameter("@Fim", $"{fim.Value:yyyy-MM-dd} 23:59:59", DbType.String);
             }
 
             using var reader = await cmd.ExecuteReaderAsync(cancellationToken);
