@@ -1,4 +1,4 @@
-﻿using AcademiaDoZe.Application.Interfaces;
+using AcademiaDoZe.Application.Interfaces;
 using AcademiaDoZe.Application.Services;
 using AcademiaDoZe.Domain.Repositories;
 using AcademiaDoZe.Infrastructure.Repositories;
@@ -13,8 +13,7 @@ public static class ApplicationDependencyInjection
         services.AddTransient<IColaboradorService, ColaboradorService>();
         services.AddTransient<IAlunoService, AlunoService>();
         services.AddTransient<IMatriculaService, MatriculaService>();
-        //services.AddTransient<IAcessoAlunoService, AcessoAlunoService>();
-        //services.AddTransient<IAcessoColaboradorService, AcessoColaboradorService>();
+        services.AddTransient<IAcessoService, AcessoService>();
 
         services.AddTransient(provider =>
         {
@@ -36,16 +35,16 @@ public static class ApplicationDependencyInjection
             var config = provider.GetRequiredService<RepositoryConfig>();
             return (Func<IMatriculaRepository>)(() => new MatriculaRepository(config.ConnectionString, config.DatabaseType));
         });
-        //services.AddTransient(provider =>
-        //{
-        //    var config = provider.GetRequiredService<RepositoryConfig>();
-        //    return (Func<IAcessoAlunoRepository>)(() => new AcessoAlunoRepository(config.ConnectionString, config.DatabaseType));
-        //});
-        //services.AddTransient(provider =>
-        //{
-        //    var config = provider.GetRequiredService<RepositoryConfig>();
-        //    return (Func<IAcessoColaboradorRepository>)(() => new AcessoColaboradorRepository(config.ConnectionString, config.DatabaseType));
-        //});
+        services.AddTransient(provider =>
+        {
+            var config = provider.GetRequiredService<RepositoryConfig>();
+            return (Func<IAcessoAlunoRepository>)(() => new AcessoAlunoRepository(config.ConnectionString, config.DatabaseType));
+        });
+        services.AddTransient(provider =>
+        {
+            var config = provider.GetRequiredService<RepositoryConfig>();
+            return (Func<IAcessoColaboradorRepository>)(() => new AcessoColaboradorRepository(config.ConnectionString, config.DatabaseType));
+        });
         return services;
     }
 }

@@ -1,4 +1,3 @@
-﻿// Estevão Santos Ribeiro
 using AcademiaDoZe.Domain.Common;
 
 namespace AcademiaDoZe.Domain.Entities;
@@ -28,5 +27,18 @@ public class AcessoAluno : Entity, IAggregateRoot
             return Result<AcessoAluno>.Failure(notifications);
 
         return Result<AcessoAluno>.Success(new AcessoAluno(id, aluno!.Id, dataHora));
+    }
+
+    public static Result<AcessoAluno> Criar(int id, int alunoId, DateTime dataHora)
+    {
+        var notifications = new List<Notification>();
+
+        if (alunoId <= 0)
+            notifications.Add(new Notification("AlunoId", "ALUNO_INVALIDO"));
+
+        if (notifications.Count != 0)
+            return Result<AcessoAluno>.Failure(notifications);
+
+        return Result<AcessoAluno>.Success(new AcessoAluno(id, alunoId, dataHora));
     }
 }
